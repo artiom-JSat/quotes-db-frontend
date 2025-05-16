@@ -29,6 +29,7 @@ const Search = () => {
 
   const handleSearch = async () => {
     setSearchButtonClicked(true)
+
     if (Object.keys(errors).length > 0) {
       return
     }
@@ -42,6 +43,15 @@ const Search = () => {
     } catch (error) {
       console.log('Error fetching quotes', error)
     }
+  }
+
+  const clearSearch = () => {
+    setText('')
+    setAuthor('')
+    setCategory('')
+    setSearchButtonClicked(false)
+    setSearchSubmitted(false)
+    setQuotes([])
   }
 
   console.log('quotes', quotes)
@@ -121,8 +131,10 @@ const Search = () => {
           )}
         </div>
       </div>
-      <div className="text-center md-6">
+
+      <div className="flex justify-center md-6 space-x-4">
         <Button onClick={handleSearch}>Search</Button>
+        <Button onClick={clearSearch} variant='secondary'>Clear</Button>
       </div>
 
       {quotes.length > 0 ? (
