@@ -1,6 +1,18 @@
-import Link from 'next/link'
+'use client'
 
-const NavBar = () => {
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+
+const Navbar = () => {
+  const pathname = usePathname()
+
+  const titles = {
+    '/': 'Random Quotes',
+    '/search': 'Search Quotes',
+  }
+
+  const pageTitle = titles[pathname] || ''
+
   return (
     <nav className="bg-white p-4 shadow-md dark:bg-gray-800">
       <div className="container mx-auto flex justify-between items-center">
@@ -9,6 +21,7 @@ const NavBar = () => {
             Quotes app
           </h1>
         </Link>
+        <h1 className="text-2xl text-center dark:text-white">{pageTitle}</h1>
         <div className="pr-8 text-xl space-x-8">
           <Link
             href="/"
@@ -28,4 +41,4 @@ const NavBar = () => {
   )
 }
 
-export default NavBar
+export default Navbar
