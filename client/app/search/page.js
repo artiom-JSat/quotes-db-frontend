@@ -3,11 +3,12 @@
 import { useState } from 'react'
 import { toast } from 'react-toastify'
 import Button from '@/components/Button'
-import Quote from '@/components/Quote'
+import InputField from '@/components/InputField'
+import Quotes from '@/components/Quotes'
 
 const CATEGORY_NAME_REGEX = /^[a-z0-9\-]+$/
 
-const createSearchQueryString = ({ text, author, category, limit = 10 }) => {
+const createSearchQueryString = ({ text, author, category, limit = 9 }) => {
   const params = new URLSearchParams()
 
   if (text) params.append('text', text)
@@ -22,16 +23,16 @@ const Search = () => {
   const [text, setText] = useState('')
   const [author, setAuthor] = useState('')
   const [category, setCategory] = useState('')
-  const [limit, setLimit] = useState('')
+  const [limit, setLimit] = useState()
   const [searchSubmitted, setSearchSubmitted] = useState(false)
   const [searchButtonClicked, setSearchButtonClicked] = useState(false)
   const [quotes, setQuotes] = useState([])
-  const [errors, setErrors] = useState({})
+  const [validationErrors, setValidationErrors] = useState({})
 
   const handleSearch = async () => {
     setSearchButtonClicked(true)
 
-    if (Object.keys(errors).length > 0) {
+    if (Object.keys(validationErrors).length > 0) {
       return
     }
 
@@ -69,7 +70,7 @@ const Search = () => {
     setText('')
     setAuthor('')
     setCategory('')
-    setLimit('')
+    setLimit()
     setSearchButtonClicked(false)
     setSearchSubmitted(false)
     setQuotes([])
@@ -94,71 +95,50 @@ const Search = () => {
     if (name === 'limit') setLimit(value)
 
     const errorMessage = getValidationMessage(name, value)
-
-    setErrors((prev) => {
-      const newErrors = { ...prev }
-      if (errorMessage) {
-        newErrors[name] = errorMessage
-      } else {
-        delete newErrors[name]
-      }
-      return newErrors
-    })
+    const newValidationErrors = { ...validationErrors }
+    if (errorMessage) {
+      newValidationErrors[name] = errorMessage
+    } else {
+      delete newValidationErrors[name]
+    }
+    setValidationErrors(newValidationErrors)
   }
 
-  const inputStyle =
-    'w-full p-2 border border-gray-300 rounded dark:bg-gray-800 dark:border-gray-600 dark:text-white'
-
-  const errorStyle = 'text-red-500 text-sm absolute'
+  const inputFields = [
+    {
+      name: 'text',
+      placeholder: 'Search by text',
+      value: text,
+      error: validationErrors.text,
+    },
+    {
+      name: 'author',
+      placeholder: 'Search by author',
+      value: author,
+      error: validationErrors.author,
+    },
+    {
+      name: 'category',
+      placeholder: 'Search by category',
+      value: category,
+      error: validationErrors.category,
+    },
+    { name: 'limit', placeholder: 'Limit', value: limit || '', error: null }, // no error for limit
+  ]
 
   return (
     <div className="p-4">
       <div className="text-xl pb-1 grid grid-cols-1 md:grid-cols-[1fr_1fr_1fr_0.3fr] gap-4 mb-6">
-        <div className="w-full">
-          <input
-            type="text"
-            placeholder="Search by text"
-            value={text}
-            onChange={(e) => handleInputChange('text', e.target.value)}
-            className={inputStyle}
+        {inputFields.map(({ name, placeholder, value, error }) => (
+          <InputField
+            key={name}
+            placeholder={placeholder}
+            value={value}
+            onChange={(e) => handleInputChange(name, e.target.value)}
+            error={error}
+            showError={searchButtonClicked}
           />
-          {errors.text && searchButtonClicked && (
-            <p className={errorStyle}>{errors.text}</p>
-          )}
-        </div>
-        <div className="w-full">
-          <input
-            type="text"
-            placeholder="Search by author"
-            value={author}
-            onChange={(e) => handleInputChange('author', e.target.value)}
-            className={inputStyle}
-          />
-          {errors.author && searchButtonClicked && (
-            <p className={errorStyle}>{errors.author}</p>
-          )}
-        </div>
-        <div className="w-full">
-          <input
-            type="text"
-            placeholder="Search by category"
-            value={category}
-            onChange={(e) => handleInputChange('category', e.target.value)}
-            className={inputStyle}
-          />
-          {errors.category && searchButtonClicked && (
-            <p className={errorStyle}>{errors.category}</p>
-          )}
-        </div>
-        <div className="w-full">
-          <input
-            type="text"
-            placeholder="Limit"
-            value={limit}
-            onChange={(e) => handleInputChange('limit', e.target.value)}
-            className={inputStyle}
-          />
-        </div>
+        ))}
       </div>
 
       <div className="flex justify-center md-6 space-x-4">
@@ -169,11 +149,7 @@ const Search = () => {
       </div>
 
       {quotes.length > 0 ? (
-        <div className="pt-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {quotes.map((quote) => (
-            <Quote key={quote.id} quote={quote} />
-          ))}
-        </div>
+        <Quotes quotes={quotes} />
       ) : (
         searchSubmitted && (
           <p className="text-xl pt-10 text-center text-gray-600 dark:text-gray-400">
