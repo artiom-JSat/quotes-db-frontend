@@ -1,19 +1,19 @@
 'use client'
 
 import { useState } from 'react'
+import { toast } from 'react-toastify'
 import Button from '@/components/Button'
 import Quote from '@/components/Quote'
 
 const CATEGORY_NAME_REGEX = /^[a-z0-9\-]+$/
 
-const createSearchQueryString = ({ text, author, category }) => {
+const createSearchQueryString = ({ text, author, category, limit = 10 }) => {
   const params = new URLSearchParams()
 
   if (text) params.append('text', text)
   if (author) params.append('author', author)
   if (category) params.append('category', category)
-
-  params.append('limit', 9)
+  if (limit) params.append('limit', limit)
 
   return params.toString()
 }
@@ -22,6 +22,7 @@ const Search = () => {
   const [text, setText] = useState('')
   const [author, setAuthor] = useState('')
   const [category, setCategory] = useState('')
+  const [limit, setLimit] = useState('')
   const [searchSubmitted, setSearchSubmitted] = useState(false)
   const [searchButtonClicked, setSearchButtonClicked] = useState(false)
   const [quotes, setQuotes] = useState([])
@@ -36,12 +37,31 @@ const Search = () => {
 
     try {
       setSearchSubmitted(true)
-      const query = createSearchQueryString({ text, author, category })
+      const query = createSearchQueryString({ text, author, category, limit })
       const response = await fetch(`http://localhost:3000/quotes?${query}`)
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        if (!errorData.errors || !Array.isArray(errorData.errors)) {
+          toast.error('Unexpected error occurred')
+          return
+        }
+        const fieldErrors = errorData.errors
+          .filter((err) => err.type === 'field')
+          .map((err) => `${err.msg} (${err.path}, ${err.value})`)
+
+        fieldErrors.forEach((errorMessage) => {
+          toast.error(errorMessage)
+        })
+
+        return
+      }
+
       const data = await response.json()
       setQuotes(data)
     } catch (error) {
       console.log('Error fetching quotes', error)
+      toast.error(error.message)
     }
   }
 
@@ -49,12 +69,11 @@ const Search = () => {
     setText('')
     setAuthor('')
     setCategory('')
+    setLimit('')
     setSearchButtonClicked(false)
     setSearchSubmitted(false)
     setQuotes([])
   }
-
-  console.log('quotes', quotes)
 
   const getValidationMessage = (name, value) => {
     if (name === 'text' && value && value.length < 2) {
@@ -72,6 +91,7 @@ const Search = () => {
     if (name === 'text') setText(value)
     if (name === 'author') setAuthor(value)
     if (name === 'category') setCategory(value)
+    if (name === 'limit') setLimit(value)
 
     const errorMessage = getValidationMessage(name, value)
 
@@ -93,7 +113,7 @@ const Search = () => {
 
   return (
     <div className="p-4">
-      <div className="text-xl pb-1 grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+      <div className="text-xl pb-1 grid grid-cols-1 md:grid-cols-[1fr_1fr_1fr_0.3fr] gap-4 mb-6">
         <div className="w-full">
           <input
             type="text"
@@ -130,11 +150,22 @@ const Search = () => {
             <p className={errorStyle}>{errors.category}</p>
           )}
         </div>
+        <div className="w-full">
+          <input
+            type="text"
+            placeholder="Limit"
+            value={limit}
+            onChange={(e) => handleInputChange('limit', e.target.value)}
+            className={inputStyle}
+          />
+        </div>
       </div>
 
       <div className="flex justify-center md-6 space-x-4">
         <Button onClick={handleSearch}>Search</Button>
-        <Button onClick={clearSearch} variant='secondary'>Clear</Button>
+        <Button onClick={clearSearch} variant="secondary">
+          Clear
+        </Button>
       </div>
 
       {quotes.length > 0 ? (
