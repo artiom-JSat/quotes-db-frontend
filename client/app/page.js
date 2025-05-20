@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { toast } from 'react-toastify'
 import Button from '@/components/Button'
 import Quote from '@/components/Quote'
 
@@ -15,6 +16,7 @@ export default function Home() {
       const data = await response.json()
       setQuotes(data)
     } catch (error) {
+      toast.error(error.message)
       console.log('Error fetching quotes: ', error)
     }
   }
@@ -27,8 +29,6 @@ export default function Home() {
 
   return (
     <div className="p-4">
-      
-
       <Button onClick={fetchQuotes}>Get random quotes</Button>
 
       <div className="pt-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

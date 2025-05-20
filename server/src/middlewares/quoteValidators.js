@@ -1,8 +1,12 @@
-const { query, param, body } = require('express-validator');
-const { CATEGORY_NAME_REGEX } = require('./categoryValidators');
+const { query, param, body } = require('express-validator')
+const { CATEGORY_NAME_REGEX } = require('./categoryValidators')
 
 const getQuotesValidators = [
-  query('limit').optional().trim().isInt({ min: 1, max: 50 }),
+  query('limit')
+    .optional()
+    .trim()
+    .isInt({ min: 1, max: 50 })
+    .withMessage('Limit must be in rage 1..50'),
   query('offset').optional().trim().isInt({ min: 0 }),
   query('author').optional().trim().escape(),
   query('text').optional().trim().escape(),
@@ -14,10 +18,10 @@ const getQuotesValidators = [
       CATEGORY_NAME_REGEX.test(value)
         ? Promise.resolve()
         : Promise.reject(
-            'Category can only contain lowercase letters, numbers and dashes'
-          )
+            'Category can only contain lowercase letters, numbers and dashes',
+          ),
     ),
-];
+]
 
 const postQuoteValidators = [
   body('text')
@@ -37,22 +41,22 @@ const postQuoteValidators = [
     .trim()
     .matches(CATEGORY_NAME_REGEX)
     .withMessage(
-      'Each category must contain only lowercase letters, numbers and dashes'
+      'Each category must contain only lowercase letters, numbers and dashes',
     ),
-];
+]
 
 const getRandomQuotesValidators = [
   query('limit').optional().trim().isInt({ min: 1, max: 20 }),
-];
+]
 
 const quoteIdParamValidator = param('id')
   .trim()
   .isInt({ min: 1, max: 2147483647 })
-  .withMessage('Quote ID must be integer in the range from 1 to 2147483647');
+  .withMessage('Quote ID must be integer in the range from 1 to 2147483647')
 
-const getSingleQuoteValidators = [quoteIdParamValidator];
+const getSingleQuoteValidators = [quoteIdParamValidator]
 
-const deleteSingleQuoteValidators = [quoteIdParamValidator];
+const deleteSingleQuoteValidators = [quoteIdParamValidator]
 
 const patchSingleQuoteValidators = [
   quoteIdParamValidator,
@@ -74,9 +78,9 @@ const patchSingleQuoteValidators = [
     .trim()
     .matches(CATEGORY_NAME_REGEX)
     .withMessage(
-      'Each category must contain only lowercase letters, numbers, and dashes'
+      'Each category must contain only lowercase letters, numbers, and dashes',
     ),
-];
+]
 
 module.exports = {
   getQuotesValidators,
@@ -85,4 +89,4 @@ module.exports = {
   deleteSingleQuoteValidators,
   postQuoteValidators,
   patchSingleQuoteValidators,
-};
+}

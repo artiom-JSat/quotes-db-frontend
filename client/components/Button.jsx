@@ -1,6 +1,4 @@
 export default function Button({ onClick, children, variant = 'primary' }) {
-  // const baseClasses = "px-4 py-2 text-xl cursor-pointer bg-violet-500 text-white rounded-md hover:bg-violet-600 focus:outline-none focus:ring-2 focus:ring-violet-600"
-
   const baseClasses =
     'px-4 py-2 text-xl rounded-md cursor-pointer hover:bg-opacity-80 focus:outline-none focus:ring-2 focus:ring-opacity-50'
   const variantClasses =
