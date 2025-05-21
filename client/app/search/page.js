@@ -43,6 +43,7 @@ const Search = () => {
 
       if (!response.ok) {
         const errorData = await response.json()
+        console.log('errorData', errorData)
         if (!errorData.errors || !Array.isArray(errorData.errors)) {
           toast.error('Unexpected error occurred')
           return
