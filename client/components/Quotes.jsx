@@ -1,4 +1,4 @@
-import Quote from "./Quote"
+import Quote from './Quote'
 
 const Quotes = ({ quotes }) => {
   return (
