@@ -4,7 +4,7 @@ import { use, useEffect, useState } from 'react'
 import { ClipLoader } from 'react-spinners'
 import { toast } from 'react-toastify'
 
-const QuotePage = ({ params }) => {
+export default function QuotePage({ params }) {
   const { id } = use(params)
   const [quote, setQuote] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
@@ -53,7 +53,7 @@ const QuotePage = ({ params }) => {
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center h-screen">
+      <div className="flex justify-center items-center pt-20">
         <ClipLoader size={60} color="violet" />
       </div>
     )
@@ -88,5 +88,3 @@ const QuotePage = ({ params }) => {
     </div>
   )
 }
-
-export default QuotePage

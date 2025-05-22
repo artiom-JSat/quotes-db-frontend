@@ -9,6 +9,7 @@ const Navbar = () => {
   const titles = {
     '/': 'Random Quotes',
     '/search': 'Search Quotes',
+    '/create': 'Create new',
   }
 
   const pageTitle = titles[pathname] || ''
@@ -34,6 +35,12 @@ const Navbar = () => {
             className="text-gray-800 dark:text-white hover:text-gray-600 dark:hover:text-gray-400"
           >
             Search
+          </Link>
+          <Link
+            href="/create"
+            className="text-gray-800 dark:text-white hover:text-gray-600 dark:hover:text-gray-400"
+          >
+            Create new
           </Link>
         </div>
       </div>

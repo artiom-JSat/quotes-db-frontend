@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
+import { ClipLoader } from 'react-spinners'
 import { toast } from 'react-toastify'
 import Button from '@/components/Button'
 import InputField from '@/components/InputField'
@@ -40,7 +41,7 @@ const hasValidationErrors = async (response) => {
   }
 }
 
-const Search = () => {
+export default function SearchQuotesPage() {
   const [text, setText] = useState('')
   const [author, setAuthor] = useState('')
   const [category, setCategory] = useState('')
@@ -49,6 +50,7 @@ const Search = () => {
   const [searchButtonClicked, setSearchButtonClicked] = useState(false)
   const [quotes, setQuotes] = useState([])
   const [validationErrors, setValidationErrors] = useState({})
+  const [isLoading, setIsLoading] = useState(false)
 
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -96,6 +98,7 @@ const Search = () => {
       router.push(`?${query}`)
 
       setSearchSubmitted(true)
+      setIsLoading(true)
       const response = await fetch(`http://localhost:3000/quotes?${query}`)
 
       if (await hasValidationErrors(response)) {
@@ -107,6 +110,8 @@ const Search = () => {
     } catch (error) {
       console.log('Error fetching quotes', error)
       toast.error(error.message)
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -193,7 +198,11 @@ const Search = () => {
         </Button>
       </div>
 
-      {quotes.length > 0 ? (
+      {isLoading ? (
+        <div className="flex justify-center items-center pt-20">
+          <ClipLoader size={60} color="violet" />
+        </div>
+      ) : quotes.length > 0 ? (
         <Quotes quotes={quotes} />
       ) : (
         searchSubmitted && (
@@ -205,5 +214,3 @@ const Search = () => {
     </div>
   )
 }
-
-export default Search
