@@ -1,17 +1,39 @@
 'use client'
 
 import { use, useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { ClipLoader } from 'react-spinners'
 import { toast } from 'react-toastify'
+import Button from '@/components/Button'
 
 export default function QuotePage({ params }) {
   const { id } = use(params)
   const [quote, setQuote] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
 
+  const router = useRouter()
+
   const isValidId = (id) => {
     const parsedId = parseInt(id, 10)
     return Number.isInteger(parsedId) && parsedId > 0
+  }
+
+  const deleteQuote = async () => {
+    const response = await fetch(`http://localhost:3000/quotes/${id}`, {
+      method: 'DELETE',
+    })
+    console.log(response)
+    if (!response.ok) {
+      toast.error(
+        response.status === 404
+          ? `Quote with ID ${id} was not found`
+          : `Unknown error. Quote with ID ${id} was not deleted`,
+      )
+      return
+    }
+
+    toast.success(`Quote with ID ${id} was successfully deleted!`)
+    setTimeout(() => router.push('/'), 2000)
   }
 
   useEffect(() => {
@@ -78,12 +100,17 @@ export default function QuotePage({ params }) {
           {quote.categories.map((category) => (
             <span
               key={category}
-              className="text-base bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-4 py-1 rounded-lg mr-2 mb-2"
+              className="text-base bg-blue-200  text-gray-700  px-4 py-1 rounded-lg mr-2 mb-2"
             >
               {category}
             </span>
           ))}
         </div>
+      </div>
+      <div className="flex justify-center mt-6">
+        <Button onClick={deleteQuote} variant="danger">
+          Delete
+        </Button>
       </div>
     </div>
   )
