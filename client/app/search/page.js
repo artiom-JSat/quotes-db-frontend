@@ -4,10 +4,12 @@ import { useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { ClipLoader } from 'react-spinners'
 import { toast } from 'react-toastify'
-import Button from '@/components/Button'
-import InputField from '@/components/InputField'
+import { API_URL } from '@/config/config'
 import Quotes from '@/components/Quotes'
+import InputField from '@/components/InputField'
+import Button from '@/components/Button'
 
+const QUOTES_URL = `${API_URL}/quotes`
 const CATEGORY_NAME_REGEX = /^[a-z0-9\-]+$/
 
 const createSearchQueryString = ({ text, author, category, limit = 9 }) => {
@@ -99,7 +101,7 @@ export default function SearchQuotesPage() {
 
       setSearchSubmitted(true)
       setIsLoading(true)
-      const response = await fetch(`http://localhost:3000/quotes?${query}`)
+      const response = await fetch(`${QUOTES_URL}?${query}`)
 
       if (await hasValidationErrors(response)) {
         return

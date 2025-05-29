@@ -1,10 +1,13 @@
 'use client'
 
-import Button from '@/components/Button'
-import InputField from '@/components/InputField'
-import { useRouter } from 'next/navigation'
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { toast } from 'react-toastify'
+import { API_URL } from '@/config/config'
+import InputField from '@/components/InputField'
+import Button from '@/components/Button'
+
+const QUOTES_URL = `${API_URL}/quotes`
 
 export default function CreateQuotePage() {
   const [text, setText] = useState('')
@@ -39,7 +42,7 @@ export default function CreateQuotePage() {
     }
 
     try {
-      const response = await fetch('http://localhost:3000/quotes', {
+      const response = await fetch(QUOTES_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

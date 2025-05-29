@@ -2,10 +2,12 @@
 
 import { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
-import Button from '@/components/Button'
+import { API_URL } from '@/config/config'
 import Quotes from '@/components/Quotes'
+import Button from '@/components/Button'
 
-const RANDOM_QUOTES_URL = 'http://localhost:3000/quotes/random?limit=9'
+const RANDOM_QUOTES_LIMIT = 9
+const RANDOM_QUOTES_URL = `${API_URL}/quotes/random?limit=${RANDOM_QUOTES_LIMIT}`
 
 export default function RandomQuotesPage() {
   const [quotes, setQuotes] = useState([])
