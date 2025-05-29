@@ -4,7 +4,10 @@ import { use, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { ClipLoader } from 'react-spinners'
 import { toast } from 'react-toastify'
+import { API_URL } from '@/config/config'
 import Button from '@/components/Button'
+
+const QUOTES_URL = `${API_URL}/quotes`
 
 export default function QuotePage({ params }) {
   const { id } = use(params)
@@ -13,13 +16,15 @@ export default function QuotePage({ params }) {
 
   const router = useRouter()
 
+  const SINGLE_QUOTE_API_URL = `${QUOTES_URL}/${id}`
+
   const isValidId = (id) => {
     const parsedId = parseInt(id, 10)
     return Number.isInteger(parsedId) && parsedId > 0
   }
 
   const deleteQuote = async () => {
-    const response = await fetch(`http://localhost:3000/quotes/${id}`, {
+    const response = await fetch(SINGLE_QUOTE_API_URL, {
       method: 'DELETE',
     })
     console.log(response)
@@ -45,7 +50,7 @@ export default function QuotePage({ params }) {
       }
 
       try {
-        const response = await fetch(`http://localhost:3000/quotes/${id}`)
+        const response = await fetch(SINGLE_QUOTE_API_URL)
         const data = await response.json()
         if (response.status === 404) {
           toast.error(data.message)
