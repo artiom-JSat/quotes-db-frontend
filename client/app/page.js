@@ -29,7 +29,7 @@ export default function RandomQuotesPage() {
 
   return (
     <div className="p-4">
-      <Button onClick={fetchQuotes}>Get random quotes</Button>
+      <Button onClick={fetchQuotes} text='Get random quotes' />
       <Quotes quotes={quotes} />
     </div>
   )

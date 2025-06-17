@@ -194,10 +194,8 @@ export default function SearchQuotesPage() {
       </div>
 
       <div className="flex justify-center md-6 space-x-4">
-        <Button onClick={handleSearch}>Search</Button>
-        <Button onClick={clearSearch} variant="secondary">
-          Clear
-        </Button>
+        <Button onClick={handleSearch} text='Search' />
+        <Button onClick={clearSearch} text='Clear' variant="secondary" />
       </div>
 
       {isLoading ? (
