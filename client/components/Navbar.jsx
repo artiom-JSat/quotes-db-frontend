@@ -1,18 +1,35 @@
 'use client'
 
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useParams } from 'next/navigation'
+
+const getPageTitle = (pathname, params) => {
+  const staticTitles = {
+    '/': 'Random Quotes',
+    '/search': 'Search Quotes',
+    '/quotes/create': 'Create Quote',
+  }
+
+  if (staticTitles[pathname]) {
+    return staticTitles[pathname]
+  }
+
+  if (pathname === `/quotes/${params.id}/edit`) {
+    return `Edit Quote #${params.id}`
+  }
+
+  if (pathname === `/quotes/${params.id}`) {
+    return `Quote #${params.id}`
+  }
+
+  return ''
+}
 
 const Navbar = () => {
   const pathname = usePathname()
+  const params = useParams()
 
-  const titles = {
-    '/': 'Random Quotes',
-    '/search': 'Search Quotes',
-    '/create': 'Create new',
-  }
-
-  const pageTitle = titles[pathname] || ''
+  const pageTitle = getPageTitle(pathname, params)
 
   return (
     <nav className="bg-white p-4 shadow-md dark:bg-gray-800">
@@ -37,7 +54,7 @@ const Navbar = () => {
             Search
           </Link>
           <Link
-            href="/create"
+            href="/quotes/create"
             className="text-gray-800 dark:text-white hover:text-gray-600 dark:hover:text-gray-400"
           >
             Create new

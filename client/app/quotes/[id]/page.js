@@ -1,6 +1,7 @@
 'use client'
 
 import { use, useEffect, useState } from 'react'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { ClipLoader } from 'react-spinners'
 import { toast } from 'react-toastify'
@@ -94,7 +95,7 @@ export default function QuotePage({ params }) {
 
   return (
     <div>
-      <div className="max-w-4xl mx-auto p-6 mt-8 bg-white shadow-lg rounded-lg dark:bg-gray-800">
+      <div className="max-w-4xl mx-auto p-6 m-8 bg-white shadow-lg rounded-lg dark:bg-gray-800">
         <h2 className="text-xl md:text-2xl text-gray-900 dark:text-violet-300">
           {quote.text}
         </h2>
@@ -112,10 +113,11 @@ export default function QuotePage({ params }) {
           ))}
         </div>
       </div>
-      <div className="flex justify-center mt-6">
-        <Button onClick={deleteQuote} variant="danger">
-          Delete
-        </Button>
+      <div className="flex justify-center md-6 space-x-4">
+        <Link href={`/quotes/${quote.id}/edit`}>
+          <Button text="Edit" variant="primary" />
+        </Link>
+        <Button onClick={deleteQuote} variant="danger" text="Delete" />
       </div>
     </div>
   )

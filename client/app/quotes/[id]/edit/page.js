@@ -1,37 +1,45 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState, use } from 'react'
 import { useRouter } from 'next/navigation'
 import { toast } from 'react-toastify'
+import { ClipLoader } from 'react-spinners'
 import { API_URL } from '@/config/config'
 import InputField from '@/components/InputField'
 import Button from '@/components/Button'
+import { isFormValid } from '../../utils/validation'
 
-const QUOTES_URL = `${API_URL}/quotes`
-
-export default function CreateQuotePage() {
+export default function EditQuotePage({ params }) {
+  const { id } = use(params)
   const [text, setText] = useState('')
   const [author, setAuthor] = useState('')
   const [categories, setCategories] = useState('')
   const [validationErrors, setValidationErrors] = useState({})
+  const [isLoading, setIsLoading] = useState(true)
 
   const router = useRouter()
+  const QUOTES_API_URL = `${API_URL}/quotes/${id}`
 
-  const isFormValid = () => {
-    const errors = {}
-    if (text.length < 10)
-      errors.text = 'Text must be at least 10 characters long.'
-    if (author.length < 2 || author.length > 255)
-      errors.author = 'Author must be between 2 and 255 characters long.'
-    if (!categories.trim())
-      errors.categories = 'There must be at least one category.'
-
-    setValidationErrors(errors)
-    return Object.keys(errors).length === 0
-  }
+  useEffect(() => {
+    const fetchQuote = async () => {
+      try {
+        const response = await fetch(QUOTES_API_URL)
+        if (!response.ok) throw new Error('Failed to load quote data')
+        const data = await response.json()
+        setText(data.text)
+        setAuthor(data.author)
+        setCategories(data.categories.join(', '))
+      } catch (error) {
+        toast.error(error.message)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    fetchQuote()
+  }, [id])
 
   const handleSubmit = async () => {
-    if (!isFormValid()) {
+    if (!isFormValid({ text, author, categories, setValidationErrors })) {
       return
     }
 
@@ -42,8 +50,8 @@ export default function CreateQuotePage() {
     }
 
     try {
-      const response = await fetch(QUOTES_URL, {
-        method: 'POST',
+      const response = await fetch(QUOTES_API_URL, {
+        method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -57,10 +65,18 @@ export default function CreateQuotePage() {
       const data = await response.json()
       toast.success('Quote created successfully!')
 
-      router.push(`/quotes/${data.id}`)
+      router.push(`/quotes/${id}`)
     } catch (error) {
       toast.error(error.message)
     }
+  }
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center pt-20">
+        <ClipLoader size={60} color="violet" />
+      </div>
+    )
   }
 
   return (
@@ -89,7 +105,7 @@ export default function CreateQuotePage() {
         />
       </div>
       <div className="flex justify-center mb-6">
-        <Button onClick={handleSubmit}>Create</Button>
+        <Button onClick={handleSubmit} text="Update" />
       </div>
     </div>
   )
