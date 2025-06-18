@@ -1,4 +1,4 @@
-export default function Button({ onClick, text, variant = 'primary' }) {
+export const Button = ({ onClick, text, variant = 'primary' }) => {
   const baseClasses =
     'px-4 py-2 text-xl rounded-md cursor-pointer hover:bg-opacity-80 focus:outline-none focus:ring-2 focus:ring-opacity-50'
 
@@ -12,7 +12,10 @@ export default function Button({ onClick, text, variant = 'primary' }) {
 
   return (
     <div className="text-center m-2">
-      <button onClick={onClick} className={`${baseClasses} ${variantClasses[variant]}`}>
+      <button
+        onClick={onClick}
+        className={`${baseClasses} ${variantClasses[variant]}`}
+      >
         {text}
       </button>
     </div>

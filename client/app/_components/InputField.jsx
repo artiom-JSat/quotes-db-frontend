@@ -1,4 +1,4 @@
-const InputField = ({ placeholder, value, onChange, error, showError }) => {
+export const InputField = ({ placeholder, value, onChange, error, showError }) => {
   return (
     <div className="w-full">
       <input
@@ -12,8 +12,6 @@ const InputField = ({ placeholder, value, onChange, error, showError }) => {
     </div>
   )
 }
-
-export default InputField
 
 export const inputStyle =
   'w-full p-2 border border-gray-300 rounded dark:bg-gray-800 dark:border-gray-600 dark:text-white'
