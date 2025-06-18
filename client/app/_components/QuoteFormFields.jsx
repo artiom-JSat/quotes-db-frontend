@@ -1,4 +1,5 @@
 import { InputField } from '@components/InputField'
+import { createQuotesInputFields } from '@config/inputFields'
 
 export const QuoteFormFields = ({
   text,
@@ -9,42 +10,30 @@ export const QuoteFormFields = ({
   setCategories,
   validationErrors,
 }) => {
-  const inputFields = [
-    {
-      name: 'text',
-      placeholder: 'Quote text',
-      value: text,
-      onChange: (e) => setText(e.target.value),
-      error: validationErrors.text,
-    },
-    {
-      name: 'author',
-      placeholder: 'Author',
-      value: author,
-      onChange: (e) => setAuthor(e.target.value),
-      error: validationErrors.author,
-    },
-    {
-      name: 'categories',
-      placeholder: 'Categories (comma-separated)',
-      value: categories,
-      onChange: (e) => setCategories(e.target.value),
-      error: validationErrors.categories,
-    },
-  ]
+  const quotesInputFields = createQuotesInputFields({
+    text,
+    setText,
+    author,
+    setAuthor,
+    categories,
+    setCategories,
+    validationErrors,
+  })
 
   return (
     <div className="text-xl grid grid-cols-1 gap-4 mb-6 mx-auto md:w-3/4 lg:w-1/2">
-      {inputFields.map(({ name, value, placeholder, error, onChange }) => (
-        <InputField
-          key={name}
-          placeholder={placeholder}
-          value={value}
-          onChange={onChange}
-          error={error}
-          showError={true}
-        />
-      ))}
+      {quotesInputFields.map(
+        ({ name, value, placeholder, error, onChange }) => (
+          <InputField
+            key={name}
+            placeholder={placeholder}
+            value={value}
+            onChange={onChange}
+            error={error}
+            showError={true}
+          />
+        ),
+      )}
     </div>
   )
 }
