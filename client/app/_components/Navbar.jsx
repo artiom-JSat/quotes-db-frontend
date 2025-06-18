@@ -25,7 +25,7 @@ const getPageTitle = (pathname, params) => {
   return ''
 }
 
-const Navbar = () => {
+export const Navbar = () => {
   const pathname = usePathname()
   const params = useParams()
 
@@ -64,5 +64,3 @@ const Navbar = () => {
     </nav>
   )
 }
-
-export default Navbar

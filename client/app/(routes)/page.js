@@ -4,8 +4,8 @@ import { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 import { ClipLoader } from 'react-spinners'
 import { API_URL } from '@config/config'
-import Quotes from '@components/Quotes'
-import Button from '@components/Button'
+import { Button } from '@components/Button'
+import { Quotes } from '@components/Quotes'
 
 const RANDOM_QUOTES_LIMIT = 9
 const RANDOM_QUOTES_URL = `${API_URL}/quotes/random?limit=${RANDOM_QUOTES_LIMIT}`

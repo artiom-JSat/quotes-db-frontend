@@ -5,9 +5,9 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { ClipLoader } from 'react-spinners'
 import { toast } from 'react-toastify'
 import { API_URL } from '@config/config'
-import Quotes from '@components/Quotes'
-import InputField from '@components/InputField'
-import Button from '@components/Button'
+import { Quotes } from '@components/Quotes'
+import { InputField } from '@components/InputField'
+import { Button } from '@components/Button'
 
 const QUOTES_URL = `${API_URL}/quotes`
 const CATEGORY_NAME_REGEX = /^[a-z0-9\-]+$/

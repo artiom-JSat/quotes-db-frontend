@@ -1,6 +1,6 @@
 import Link from 'next/link'
 
-const Quote = ({ quote }) => {
+export const Quote = ({ quote }) => {
   return (
     <Link
       href={`/quotes/${quote.id}`}
@@ -25,5 +25,3 @@ const Quote = ({ quote }) => {
     </Link>
   )
 }
-
-export default Quote
