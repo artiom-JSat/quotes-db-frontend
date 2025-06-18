@@ -5,8 +5,8 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { ClipLoader } from 'react-spinners'
 import { toast } from 'react-toastify'
-import { API_URL } from '@/config/config'
-import Button from '@/components/Button'
+import { API_URL } from '@config/config'
+import Button from '@components/Button'
 
 const QUOTES_URL = `${API_URL}/quotes`
 

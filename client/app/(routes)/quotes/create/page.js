@@ -3,10 +3,10 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { toast } from 'react-toastify'
-import { API_URL } from '@/config/config'
-import InputField from '@/components/InputField'
-import Button from '@/components/Button'
-import { isFormValid } from '../utils/validation'
+import { API_URL } from '@config/config'
+import { isFormValid } from '@utils/validation'
+import InputField from '@components/InputField'
+import Button from '@components/Button'
 
 const QUOTES_URL = `${API_URL}/quotes`
 
