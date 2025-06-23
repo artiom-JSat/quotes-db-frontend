@@ -7,8 +7,7 @@ import { ClipLoader } from 'react-spinners'
 import { toast } from 'react-toastify'
 import { API_URL } from '@config/config'
 import { Button } from '@components/Button'
-
-const QUOTES_URL = `${API_URL}/quotes`
+import fetcher from '@utils/fetcher'
 
 export default function QuotePage({ params }) {
   const { id } = use(params)
@@ -17,7 +16,8 @@ export default function QuotePage({ params }) {
 
   const router = useRouter()
 
-  const SINGLE_QUOTE_API_URL = `${QUOTES_URL}/${id}`
+  const SINGLE_QUOTE_PATH = `quotes/${id}`
+  const SINGLE_QUOTE_API_URL = `${API_URL}/quotes/${id}`
 
   const isValidId = (id) => {
     const parsedId = parseInt(id, 10)
@@ -25,21 +25,10 @@ export default function QuotePage({ params }) {
   }
 
   const deleteQuote = async () => {
-    const response = await fetch(SINGLE_QUOTE_API_URL, {
-      method: 'DELETE',
-    })
-    console.log(response)
-    if (!response.ok) {
-      toast.error(
-        response.status === 404
-          ? `Quote with ID ${id} was not found`
-          : `Unknown error. Quote with ID ${id} was not deleted`,
-      )
-      return
+    if (await fetcher.delete(SINGLE_QUOTE_PATH)) {
+      toast.success(`Quote with ID ${id} was successfully deleted!`)
+      setTimeout(() => router.push('/'), 2000)
     }
-
-    toast.success(`Quote with ID ${id} was successfully deleted!`)
-    setTimeout(() => router.push('/'), 2000)
   }
 
   useEffect(() => {
