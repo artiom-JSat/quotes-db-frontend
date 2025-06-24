@@ -13,7 +13,12 @@ import { getSearchInputValidationMessage } from '@utils/validation'
 const QUOTES_URL_ENDPOINT = `quotes`
 const DEFAULT_LIMIT = 9
 
-const createSearchQueryString = ({ text, author, category, limit = DEFAULT_LIMIT }) => {
+const createSearchQueryString = ({
+  text,
+  author,
+  category,
+  limit = DEFAULT_LIMIT,
+}) => {
   const params = new URLSearchParams()
 
   if (text) params.append('text', text)
@@ -37,14 +42,19 @@ export default function SearchQuotesPage() {
 
   const router = useRouter()
   const searchParams = useSearchParams()
-  
+
   useEffect(() => {
     const initialText = searchParams.get('text') || ''
     const initialAuthor = searchParams.get('author') || ''
     const initialCategory = searchParams.get('category') || ''
     const initialLimit = searchParams.get('limit') || DEFAULT_LIMIT
 
-    if (initialText || initialAuthor || initialCategory) {
+    const shouldTriggerSearch =
+      initialText !== text ||
+      initialAuthor !== author ||
+      initialCategory !== category
+
+    if (shouldTriggerSearch) {
       setText(initialText)
       setAuthor(initialAuthor)
       setCategory(initialCategory)
@@ -78,7 +88,7 @@ export default function SearchQuotesPage() {
       limit: searchLimit,
     })
     router.push(`?${query}`)
-    
+
     setSearchSubmitted(true)
     setIsLoading(true)
     const data = await fetcher.get(`${QUOTES_URL_ENDPOINT}?${query}`)
