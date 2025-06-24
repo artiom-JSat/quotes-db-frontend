@@ -11,8 +11,9 @@ import { fetcher } from '@utils/fetcher'
 import { getSearchInputValidationMessage } from '@utils/validation'
 
 const QUOTES_URL_ENDPOINT = `quotes`
+const DEFAULT_LIMIT = 9
 
-const createSearchQueryString = ({ text, author, category, limit = 9 }) => {
+const createSearchQueryString = ({ text, author, category, limit = DEFAULT_LIMIT }) => {
   const params = new URLSearchParams()
 
   if (text) params.append('text', text)
@@ -36,18 +37,18 @@ export default function SearchQuotesPage() {
 
   const router = useRouter()
   const searchParams = useSearchParams()
-
+  
   useEffect(() => {
     const initialText = searchParams.get('text') || ''
     const initialAuthor = searchParams.get('author') || ''
     const initialCategory = searchParams.get('category') || ''
-    const initialLimit = searchParams.get('limit')
+    const initialLimit = searchParams.get('limit') || DEFAULT_LIMIT
 
-    if (initialText || initialAuthor || initialCategory || initialLimit) {
-      initialText && setText(initialText)
-      initialAuthor && setAuthor(initialAuthor)
-      initialCategory && setCategory(initialCategory)
-      initialLimit && setLimit(initialLimit)
+    if (initialText || initialAuthor || initialCategory) {
+      setText(initialText)
+      setAuthor(initialAuthor)
+      setCategory(initialCategory)
+      setLimit(initialLimit)
 
       handleSearch({
         searchText: initialText,
@@ -56,7 +57,7 @@ export default function SearchQuotesPage() {
         searchLimit: initialLimit,
       })
     }
-  }, [])
+  }, [searchParams])
 
   const handleSearch = async ({
     searchText = text,
@@ -77,7 +78,7 @@ export default function SearchQuotesPage() {
       limit: searchLimit,
     })
     router.push(`?${query}`)
-
+    
     setSearchSubmitted(true)
     setIsLoading(true)
     const data = await fetcher.get(`${QUOTES_URL_ENDPOINT}?${query}`)
@@ -145,7 +146,7 @@ export default function SearchQuotesPage() {
           <ClipLoader size={60} color="violet" />
         </div>
       ) : quotes.length > 0 ? (
-        <Quotes quotes={quotes} />
+        <Quotes quotes={quotes} category={category} />
       ) : (
         searchSubmitted && (
           <p className="text-xl pt-10 text-center text-gray-600 dark:text-gray-400">
