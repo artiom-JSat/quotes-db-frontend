@@ -30,3 +30,15 @@ export const isQuoteFormValid = ({
   setValidationErrors(errors)
   return Object.keys(errors).length === 0
 }
+
+export const getSearchInputValidationMessage = (name, value) => {
+  if (name === 'text' && value && value.length < 2) {
+    return '* Text must be at least 2 characters long.'
+  }
+  if (name === 'author' && value && value.length < 2) {
+    return '* Author must be at least 2 characters long.'
+  }
+  if (name === 'category' && value && !CATEGORY_NAME_REGEX.test(value)) {
+    return '* Category can only contain lowercase letters, numbers and dashes.'
+  }
+}

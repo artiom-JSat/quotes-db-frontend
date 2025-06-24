@@ -8,9 +8,9 @@ import { InputField } from '@components/InputField'
 import { Button } from '@components/Button'
 import { createSearchInputFields } from '@config/inputFields'
 import { fetcher } from '@utils/fetcher'
+import { getSearchInputValidationMessage } from '@utils/validation'
 
 const QUOTES_URL_ENDPOINT = `quotes`
-const CATEGORY_NAME_REGEX = /^[a-z0-9\-]+$/
 
 const createSearchQueryString = ({ text, author, category, limit = 9 }) => {
   const params = new URLSearchParams()
@@ -96,25 +96,13 @@ export default function SearchQuotesPage() {
     router.push(window.location.pathname)
   }
 
-  const getValidationMessage = (name, value) => {
-    if (name === 'text' && value && value.length < 2) {
-      return '* Text must be at least 2 characters long.'
-    }
-    if (name === 'author' && value && value.length < 2) {
-      return '* Author must be at least 2 characters long.'
-    }
-    if (name === 'category' && value && !CATEGORY_NAME_REGEX.test(value)) {
-      return '* Category can only contain lowercase letters, numbers and dashes.'
-    }
-  }
-
   const handleInputChange = (name, value) => {
     if (name === 'text') setText(value)
     if (name === 'author') setAuthor(value)
     if (name === 'category') setCategory(value)
     if (name === 'limit') setLimit(value)
 
-    const errorMessage = getValidationMessage(name, value)
+    const errorMessage = getSearchInputValidationMessage(name, value)
     const newValidationErrors = { ...validationErrors }
     if (errorMessage) {
       newValidationErrors[name] = errorMessage
