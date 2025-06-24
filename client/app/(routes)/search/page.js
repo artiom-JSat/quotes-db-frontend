@@ -3,14 +3,13 @@
 import { useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { ClipLoader } from 'react-spinners'
-import { toast } from 'react-toastify'
-import { API_URL } from '@config/config'
 import { Quotes } from '@components/Quotes'
 import { InputField } from '@components/InputField'
 import { Button } from '@components/Button'
 import { createSearchInputFields } from '@config/inputFields'
+import { fetcher } from '@utils/fetcher'
 
-const QUOTES_URL = `${API_URL}/quotes`
+const QUOTES_URL_ENDPOINT = `quotes`
 const CATEGORY_NAME_REGEX = /^[a-z0-9\-]+$/
 
 const createSearchQueryString = ({ text, author, category, limit = 9 }) => {
@@ -22,26 +21,6 @@ const createSearchQueryString = ({ text, author, category, limit = 9 }) => {
   if (limit) params.append('limit', limit)
 
   return params.toString()
-}
-
-const hasServerValidationErrors = async (response) => {
-  if (!response.ok) {
-    const errorData = await response.json()
-    console.log('errorData', errorData)
-    if (!errorData.errors || !Array.isArray(errorData.errors)) {
-      toast.error('Unexpected error occurred')
-      return
-    }
-    const fieldErrors = errorData.errors
-      .filter((err) => err.type === 'field')
-      .map((err) => `${err.msg} (${err.path}, ${err.value})`)
-
-    fieldErrors.forEach((errorMessage) => {
-      toast.error(errorMessage)
-    })
-
-    return true
-  }
 }
 
 export default function SearchQuotesPage() {
@@ -91,31 +70,19 @@ export default function SearchQuotesPage() {
       return
     }
 
-    try {
-      const query = createSearchQueryString({
-        text: searchText,
-        author: searchAuthor,
-        category: searchCategory,
-        limit: searchLimit,
-      })
-      router.push(`?${query}`)
+    const query = createSearchQueryString({
+      text: searchText,
+      author: searchAuthor,
+      category: searchCategory,
+      limit: searchLimit,
+    })
+    router.push(`?${query}`)
 
-      setSearchSubmitted(true)
-      setIsLoading(true)
-      const response = await fetch(`${QUOTES_URL}?${query}`)
-
-      if (await hasServerValidationErrors(response)) {
-        return
-      }
-
-      const data = await response.json()
-      setQuotes(data)
-    } catch (error) {
-      console.log('Error fetching quotes', error)
-      toast.error(error.message)
-    } finally {
-      setIsLoading(false)
-    }
+    setSearchSubmitted(true)
+    setIsLoading(true)
+    const data = await fetcher.get(`${QUOTES_URL_ENDPOINT}?${query}`)
+    if (data) setQuotes(data)
+    setIsLoading(false)
   }
 
   const clearSearch = () => {

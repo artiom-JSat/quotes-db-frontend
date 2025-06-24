@@ -2,17 +2,23 @@ import { toast } from 'react-toastify'
 import { API_URL } from '@config/config'
 import { handleErrors } from '@utils/fetcherErrorsHandler'
 
-export default {
-  // get: async (endpoint) => {
-  //   try {
-  //     const response = await fetch(`${API_URL}/${endpoint}`)
-  //     await handleErrors(response)
-  //     return await response.json()
-  //   } catch (error) {
-  //     console.error('Error during GET request: ', error)
-  //     throw error
-  //   }
-  // },
+export const fetcher = {
+  get: async (endpoint, queryParams = {}) => {
+    try {
+      const queryString = new URLSearchParams(queryParams).toString()
+      const url = queryString
+        ? `${API_URL}/${endpoint}?${queryString}`
+        : `${API_URL}/${endpoint}`
+      const response = await fetch(url)
+      await handleErrors(response)
+      if (response.ok) {
+        return await response.json()
+      }
+    } catch (error) {
+      console.error('Error during GET request: ', error)
+      toast.error(error.message)
+    }
+  },
   // post: async (endpoint, payload) => {
   //   try {
   //     const response = await fetch(`${API_URL}/${endpoint}`, {
