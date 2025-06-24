@@ -43,7 +43,7 @@ export default function QuotePage({ params }) {
 
   useEffect(() => {
     fetchQuote()
-  })
+  }, [])
 
   if (isLoading) {
     return (

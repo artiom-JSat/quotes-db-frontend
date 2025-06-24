@@ -4,9 +4,9 @@ import { useEffect, useState, use } from 'react'
 import { useRouter } from 'next/navigation'
 import { toast } from 'react-toastify'
 import { ClipLoader } from 'react-spinners'
-import { API_URL } from '@config/config'
 import { isQuoteFormValid } from '@utils/validation'
 import { QuoteForm } from '@components/QuoteForm'
+import { fetcher } from '@utils/fetcher'
 
 export default function EditQuotePage({ params }) {
   const { id } = use(params)
@@ -17,25 +17,21 @@ export default function EditQuotePage({ params }) {
   const [isLoading, setIsLoading] = useState(true)
 
   const router = useRouter()
-  const QUOTES_API_URL = `${API_URL}/quotes/${id}`
+  const QUOTES_API_ENDPOINT = `quotes/${id}`
 
-  useEffect(() => {
-    const fetchQuote = async () => {
-      try {
-        const response = await fetch(QUOTES_API_URL)
-        if (!response.ok) throw new Error('Failed to load quote data')
-        const data = await response.json()
-        setText(data.text)
-        setAuthor(data.author)
-        setCategories(data.categories.join(', '))
-      } catch (error) {
-        toast.error(error.message)
-      } finally {
-        setIsLoading(false)
-      }
+  const fetchQuote = async () => {
+    const data = await fetcher.get(QUOTES_API_ENDPOINT)
+    if (data) {
+      setText(data.text)
+      setAuthor(data.author)
+      setCategories(data.categories.join(', '))
     }
+    setIsLoading(false)
+  }
+  
+  useEffect(() => {
     fetchQuote()
-  }, [id])
+  }, [])
 
   const handleSubmit = async () => {
     if (!isQuoteFormValid({ text, author, categories, setValidationErrors })) {
@@ -48,25 +44,10 @@ export default function EditQuotePage({ params }) {
       categories: categories.split(',').map((category) => category.trim()),
     }
 
-    try {
-      const response = await fetch(QUOTES_API_URL, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      })
-
-      if (!response.ok) {
-        throw new Error('Failed to create quote.')
-      }
-
-      const data = await response.json()
-      toast.success('Quote created successfully!')
-
+    const data = await fetcher.patch(QUOTES_API_ENDPOINT, payload)
+    if (data) {
+      toast.success('Quote edited successfully!')
       router.push(`/quotes/${id}`)
-    } catch (error) {
-      toast.error(error.message)
     }
   }
 
