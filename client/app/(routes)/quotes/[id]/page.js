@@ -5,9 +5,8 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { ClipLoader } from 'react-spinners'
 import { toast } from 'react-toastify'
-import { API_URL } from '@config/config'
 import { Button } from '@components/Button'
-import fetcher from '@utils/fetcher'
+import { fetcher } from '@utils/fetcher'
 
 export default function QuotePage({ params }) {
   const { id } = use(params)
@@ -16,8 +15,7 @@ export default function QuotePage({ params }) {
 
   const router = useRouter()
 
-  const SINGLE_QUOTE_PATH = `quotes/${id}`
-  const SINGLE_QUOTE_API_URL = `${API_URL}/quotes/${id}`
+  const SINGLE_QUOTE_ENDPOINT = `quotes/${id}`
 
   const isValidId = (id) => {
     const parsedId = parseInt(id, 10)
@@ -25,48 +23,27 @@ export default function QuotePage({ params }) {
   }
 
   const deleteQuote = async () => {
-    if (await fetcher.delete(SINGLE_QUOTE_PATH)) {
+    if (await fetcher.delete(SINGLE_QUOTE_ENDPOINT)) {
       toast.success(`Quote with ID ${id} was successfully deleted!`)
       setTimeout(() => router.push('/'), 2000)
     }
   }
 
-  useEffect(() => {
-    const fetchQuote = async () => {
-      if (!isValidId(id)) {
-        toast.error(`Invalid quote ID ${id}. ID must be an integer than 0.`)
-        setIsLoading(false)
-        return
-      }
-
-      try {
-        const response = await fetch(SINGLE_QUOTE_API_URL)
-        const data = await response.json()
-        if (response.status === 404) {
-          toast.error(data.message)
-          console.log(data.message)
-          return
-        }
-        if (response.status === 400) {
-          data.errors.forEach((error) => {
-            toast.error(error.msg)
-            console.log(error.msg)
-          })
-          return
-        }
-        if (response.ok) {
-          setQuote(data)
-        }
-      } catch (error) {
-        toast.error(error.message)
-        console.error('Error fetching quote: ', error)
-      } finally {
-        setIsLoading(false)
-      }
+  const fetchQuote = async () => {
+    if (!isValidId(id)) {
+      toast.error(`Invalid quote ID ${id}. ID must be an integer than 0.`)
+      setIsLoading(false)
+      return
     }
 
+    const data = await fetcher.get(SINGLE_QUOTE_ENDPOINT)
+    if (data) setQuote(data)
+    setIsLoading(false)
+  }
+
+  useEffect(() => {
     fetchQuote()
-  }, [id])
+  })
 
   if (isLoading) {
     return (
