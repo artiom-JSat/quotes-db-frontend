@@ -1,27 +1,29 @@
 import Link from 'next/link'
 
-export const Quote = ({ quote }) => {
+export const Quote = ({ quote, selectedCategory }) => {
   return (
-    <Link
-      href={`/quotes/${quote.id}`}
-      className="bg-white dark:bg-gray-800 p-4 shadow-md rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 hover:-translate-y-1.5 transition-transform duration-300"
-    >
-      <p className="mb-4 text-lg italic text-gray-900  dark:text-gray-100">
-        &quot;{quote.text}&quot;
-      </p>
-      <p className="mb-10 text-right font-semibold text-gray-700  dark:text-gray-300">
-        — {quote.author}
-      </p>
+    <div className="bg-white dark:bg-gray-800 p-4 shadow-md rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 hover:-translate-y-1.5 transition-transform duration-300">
+      <Link href={`/quotes/${quote.id}`}>
+        <p className="mb-4 text-lg italic text-gray-900 dark:text-gray-100">
+          &quot;{quote.text}&quot;
+        </p>
+        <p className="mb-10 text-right font-semibold text-gray-700 dark:text-gray-300">
+          — {quote.author}
+        </p>
+      </Link>
       <div className="flex flex-wrap mt-2">
         {quote.categories.map((category) => (
-          <span
+          <Link
+            href={`/search?category=${category}`}
             key={category}
-            className="text-xs bg-blue-200  text-gray-700 px-2 py-1 rounded-full mr-2 mb-2"
+            className={`${
+              category === selectedCategory ? ` bg-yellow-200` : `bg-blue-200`
+            } text-xs text-gray-700 px-2 py-1 rounded-full mr-2 mb-2`}
           >
             {category}
-          </span>
+          </Link>
         ))}
       </div>
-    </Link>
+    </div>
   )
 }
