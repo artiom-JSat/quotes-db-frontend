@@ -7,6 +7,7 @@ import { ClipLoader } from 'react-spinners'
 import { toast } from 'react-toastify'
 import { Button } from '@components/Button'
 import { fetcher } from '@utils/fetcher'
+import { CategoryTags } from '@components/CategoryTags'
 
 export default function QuotePage({ params }) {
   const { id } = use(params)
@@ -68,16 +69,7 @@ export default function QuotePage({ params }) {
         <p className="text-2xl font-bold text-right mb-6 mt-4 text-gray-600 dark:text-gray-300">
           — {quote.author}
         </p>
-        <div className="flex flex-wrap mt-2">
-          {quote.categories.map((category) => (
-            <span
-              key={category}
-              className="text-base bg-blue-200  text-gray-700  px-4 py-1 rounded-lg mr-2 mb-2"
-            >
-              {category}
-            </span>
-          ))}
-        </div>
+        <CategoryTags categories={quote.categories} isSingleQuotePage={true} />
       </div>
       <div className="flex justify-center md-6 space-x-4">
         <Link href={`/quotes/${quote.id}/edit`}>
