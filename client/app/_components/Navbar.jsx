@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname, useParams } from 'next/navigation'
+import { useState } from 'react'
 
 const getPageTitle = (pathname, params) => {
   const staticTitles = {
@@ -26,39 +27,103 @@ const getPageTitle = (pathname, params) => {
 }
 
 export const Navbar = () => {
+  const [isOpen, setIsOpen] = useState(false)
   const pathname = usePathname()
   const params = useParams()
 
   const pageTitle = getPageTitle(pathname, params)
 
+  const toggleMenu = () => {
+    setIsOpen(!isOpen)
+  }
+
+  const MenuButton = () => (
+    <button
+      onClick={toggleMenu}
+      className="ml-auto text-gray-800 dark:text-white focus:outline-none md:hidden"
+    >
+      <svg
+        className="w-8 h-8"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 20"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="2"
+          d={isOpen ? 'M6 18L18 6M6 6l12 12' : 'M4 6h16M4 12h16M4 18h16'}
+        />
+      </svg>
+    </button>
+  )
+
+  const menuItems = [
+    { href: '/', text: 'Random' },
+    { href: '/search', text: 'Search' },
+    { href: '/quotes/create', text: 'Create New' },
+  ]
+
   return (
-    <nav className="bg-white p-4 shadow-md dark:bg-gray-800">
+    <nav className="bg-white dark:bg-gray-800 p-4 shadow-md">
       <div className="container mx-auto flex justify-between items-center">
         <Link href="/">
-          <h1 className="pl-8 text-3xl font-bold text-gray-800 dark:text-white">
+          <h1 className="text-3xl font-bold text-gray-800 dark:text-white">
             Quotes app
           </h1>
         </Link>
-        <h1 className="text-2xl text-center dark:text-white">{pageTitle}</h1>
-        <div className="pr-8 text-xl space-x-8">
-          <Link
-            href="/"
-            className="text-gray-800 dark:text-white hover:text-gray-600 dark:hover:text-gray-400"
-          >
-            Random
-          </Link>
-          <Link
-            href="/search"
-            className="text-gray-800 dark:text-white hover:text-gray-600 dark:hover:text-gray-400"
-          >
-            Search
-          </Link>
-          <Link
-            href="/quotes/create"
-            className="text-gray-800 dark:text-white hover:text-gray-600 dark:hover:text-gray-400"
-          >
-            Create new
-          </Link>
+        <h1 className="hidden md:block absolute left-1/2 transform -translate-x-1/2 text-xl lg:text-2xl dark:text-white">
+          {pageTitle}
+        </h1>
+
+        {/* Hamburger Button for Mobile Menu */}
+        <MenuButton />
+
+        {/* Mobile Menu */}
+        <div
+          className={`fixed top-0 right-0 h-full w-3/4 transform ${
+            isOpen ? 'translate-x-0' : 'translate-x-full'
+          } transition-transform duration-500 ease-in-out z-40 bg-gradient-to-r from-transparent to-white dark:from-transparent dark:to-gray-800`}
+        >
+          <div className="flex flex-col pt-5 pr-5 items-end justify-center space-y-4 text-2xl">
+            <MenuButton />
+            {menuItems.map((menuItem) => (
+              <Link
+                key={menuItem.text}
+                href={menuItem.href}
+                className="text-gray-800 dark:text-white hover:text-gray-600 dark:hover:text-gray-400"
+                onClick={() => setIsOpen(false)}
+              >
+                {menuItem.text}
+              </Link>
+            ))}
+          </div>
+        </div>
+
+        {/* Background Overlay for Mobile Menu */}
+        {
+          <div
+            className={`${
+              isOpen ? 'opacity-80 w-full' : 'opacity-0 w-0'
+            } transition-all duration-500 fixed h-full top-0 right-0 bg-black md:hidden`}
+            onClick={toggleMenu}
+          />
+        }
+
+        {/* Desktop Menu */}
+        <div className="hidden md:flex space-x-2 lg:space-x-8 pl-20 text-xl">
+
+          <MenuButton />
+          {menuItems.map((menuItem) => (
+            <Link
+              key={menuItem.text}
+              href={menuItem.href}
+              className="text-gray-800 dark:text-white hover:text-gray-600 dark:hover:text-gray-400"
+            >
+              {menuItem.text}
+            </Link>
+          ))}
         </div>
       </div>
     </nav>
