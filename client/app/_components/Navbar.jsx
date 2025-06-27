@@ -3,6 +3,8 @@
 import Link from 'next/link'
 import { usePathname, useParams } from 'next/navigation'
 import { useState } from 'react'
+import { AppIcon } from '@shared/appIcon'
+import { MenuIcon } from '@shared/menuIcon'
 
 const getPageTitle = (pathname, params) => {
   const staticTitles = {
@@ -42,20 +44,7 @@ export const Navbar = () => {
       onClick={toggleMenu}
       className="ml-auto text-gray-800 dark:text-white focus:outline-none md:hidden"
     >
-      <svg
-        className="w-8 h-8"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 20"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="2"
-          d={isOpen ? 'M6 18L18 6M6 6l12 12' : 'M4 6h16M4 12h16M4 18h16'}
-        />
-      </svg>
+      <MenuIcon isOpen={isOpen} />
     </button>
   )
 
@@ -66,9 +55,10 @@ export const Navbar = () => {
   ]
 
   return (
-    <nav className="bg-white dark:bg-gray-800 p-4 shadow-md">
+    <nav className="bg-white dark:bg-gray-800 py-4 px-8 shadow-md">
       <div className="container mx-auto flex justify-between items-center">
-        <Link href="/">
+        <Link href="/" className="flex items-center gap-4 -m-1">
+          <AppIcon alt="Quotes App icon" />
           <h1 className="text-3xl font-bold text-gray-800 dark:text-white">
             Quotes app
           </h1>
@@ -113,7 +103,6 @@ export const Navbar = () => {
 
         {/* Desktop Menu */}
         <div className="hidden md:flex space-x-2 lg:space-x-8 pl-20 text-xl">
-
           <MenuButton />
           {menuItems.map((menuItem) => (
             <Link

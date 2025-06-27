@@ -4,7 +4,8 @@
       // "@/*": ["./*"],
       "@components/*": ["./app/_components/*"],
       "@config/*": ["./app/_config/*"],
-      "@utils/*": ["./app/_utils/*"]
+      "@utils/*": ["./app/_utils/*"],
+      "@shared/*": ["./app/_shared/*"]
     }
   }
 }
