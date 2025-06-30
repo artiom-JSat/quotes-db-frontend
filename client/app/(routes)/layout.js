@@ -20,14 +20,14 @@ export const metadata = {
   icons: {
     icon: [
       { url: '/favicon.ico', type: 'image/x-icon', sizes: 'any' },
-      { url: '/favicon/favicon-16x16.png', type: 'image/png', sizes: '16x16' },
-      { url: '/favicon/favicon-32x32.png', type: 'image/png', sizes: '32x32' },
+      { url: '/favicon-16x16.png', type: 'image/png', sizes: '16x16' },
+      { url: '/favicon-32x32.png', type: 'image/png', sizes: '32x32' },
     ],
-    apple: [{ url: '/favicon/apple-touch-icon.png', sizes: '180x180' }],
+    apple: [{ url: '/apple-touch-icon.png', sizes: '180x180' }],
     other: [
       {
         rel: 'manifest',
-        url: '/favicon/site.webmanifest',
+        url: '/site.webmanifest',
       },
     ],
   },
