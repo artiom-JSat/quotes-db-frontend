@@ -156,7 +156,7 @@ export default function SearchQuotesPage() {
           <ClipLoader size={60} color="violet" />
         </div>
       ) : quotes.length > 0 ? (
-        <Quotes quotes={quotes} category={category} />
+        <Quotes quotes={quotes} category={category} searchText={text} />
       ) : (
         searchSubmitted && (
           <p className="text-xl pt-10 text-center text-gray-600 dark:text-gray-400">
