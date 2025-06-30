@@ -66,9 +66,11 @@ export default function QuotePage({ params }) {
         <h2 className="text-xl md:text-2xl text-gray-900 dark:text-violet-300">
           {quote.text}
         </h2>
-        <p className="text-2xl font-bold text-right mb-6 mt-4 text-gray-600 dark:text-gray-300">
-          — {quote.author}
-        </p>
+        <Link href={`/search?author=${quote.author}`}>
+          <p className="text-2xl font-bold text-right mb-6 mt-4 text-gray-600 dark:text-gray-300">
+            — <span className="hover:underline">{quote.author}</span>
+          </p>
+        </Link>
         <CategoryTags categories={quote.categories} isSingleQuotePage={true} />
       </div>
       <div className="flex justify-center md-6 space-x-4">
