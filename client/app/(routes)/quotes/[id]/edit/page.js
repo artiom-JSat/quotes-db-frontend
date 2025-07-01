@@ -8,11 +8,15 @@ import { isQuoteFormValid } from '@utils/validation'
 import { QuoteForm } from '@components/QuoteForm'
 import { fetcher } from '@utils/fetcher'
 
+const INITIAL_FORM_VALUES = {
+  text: '',
+  author: '',
+  categories: '',
+}
+
 export default function EditQuotePage({ params }) {
   const { id } = use(params)
-  const [text, setText] = useState('')
-  const [author, setAuthor] = useState('')
-  const [categories, setCategories] = useState('')
+  const [formValues, setFormValues] = useState(INITIAL_FORM_VALUES)
   const [validationErrors, setValidationErrors] = useState({})
   const [isLoading, setIsLoading] = useState(true)
 
@@ -22,26 +26,30 @@ export default function EditQuotePage({ params }) {
   const fetchQuote = async () => {
     const data = await fetcher.get(QUOTES_API_ENDPOINT)
     if (data) {
-      setText(data.text)
-      setAuthor(data.author)
-      setCategories(data.categories.join(', '))
+      setFormValues({
+        text: data.text,
+        author: data.author,
+        categories: data.categories.join(', '), // Assuming categories is an array
+      })
     }
     setIsLoading(false)
   }
-  
+
   useEffect(() => {
     fetchQuote()
   }, [])
 
   const handleSubmit = async () => {
-    if (!isQuoteFormValid({ text, author, categories, setValidationErrors })) {
+    if (!isQuoteFormValid({ values: formValues, setValidationErrors })) {
       return
     }
 
     const payload = {
-      text,
-      author,
-      categories: categories.split(',').map((category) => category.trim()),
+      text: formValues.text,
+      author: formValues.author,
+      categories: formValues.categories
+        .split(',')
+        .map((category) => category.trim()),
     }
 
     const data = await fetcher.patch(QUOTES_API_ENDPOINT, payload)
@@ -61,12 +69,8 @@ export default function EditQuotePage({ params }) {
 
   return (
     <QuoteForm
-      text={text}
-      setText={setText}
-      author={author}
-      setAuthor={setAuthor}
-      categories={categories}
-      setCategories={setCategories}
+      values={formValues}
+      setValues={setFormValues}
       validationErrors={validationErrors}
       handleSubmit={handleSubmit}
       buttonText="Update"

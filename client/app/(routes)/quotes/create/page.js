@@ -8,24 +8,29 @@ import { QuoteForm } from '@components/QuoteForm'
 import { fetcher } from '@utils/fetcher'
 
 const QUOTES_URL_ENDPOINT = `quotes`
+const INITIAL_FORM_VALUES = {
+    text: '',
+    author: '',
+    categories: '',
+  }
 
 export default function CreateQuotePage() {
-  const [text, setText] = useState('')
-  const [author, setAuthor] = useState('')
-  const [categories, setCategories] = useState('')
+  const [formValues, setFormValues] = useState(INITIAL_FORM_VALUES)
   const [validationErrors, setValidationErrors] = useState({})
 
   const router = useRouter()
 
   const handleSubmit = async () => {
-    if (!isQuoteFormValid({ text, author, categories, setValidationErrors })) {
+    if (!isQuoteFormValid({ values: formValues, setValidationErrors })) {
       return
     }
 
     const payload = {
-      text,
-      author,
-      categories: categories.split(',').map((category) => category.trim()),
+      text: formValues.text,
+      author: formValues.author,
+      categories: formValues.categories
+        .split(',')
+        .map((category) => category.trim()),
     }
 
     const data = await fetcher.post(QUOTES_URL_ENDPOINT, payload)
@@ -37,12 +42,8 @@ export default function CreateQuotePage() {
 
   return (
     <QuoteForm
-      text={text}
-      setText={setText}
-      author={author}
-      setAuthor={setAuthor}
-      categories={categories}
-      setCategories={setCategories}
+      values={formValues}
+      setValues={setFormValues}
       validationErrors={validationErrors}
       handleSubmit={handleSubmit}
       buttonText="Create"
