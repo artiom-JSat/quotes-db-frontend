@@ -1,35 +1,36 @@
 // For new quote page form and edit existing quote page form
 export const createQuotesInputFields = ({
-  text,
-  setText,
-  author,
-  setAuthor,
-  categories,
-  setCategories,
+  values,
+  setValues,
   validationErrors,
-}) => [
-  {
-    name: 'text',
-    placeholder: 'Quote text',
-    value: text,
-    onChange: (e) => setText(e.target.value),
-    error: validationErrors.text,
-  },
-  {
-    name: 'author',
-    placeholder: 'Author',
-    value: author,
-    onChange: (e) => setAuthor(e.target.value),
-    error: validationErrors.author,
-  },
-  {
-    name: 'categories',
-    placeholder: 'Categories (comma-separated)',
-    value: categories,
-    onChange: (e) => setCategories(e.target.value),
-    error: validationErrors.categories,
-  },
-]
+}) => {
+  const setValuesHandler = (name, value) =>
+    setValues({ ...values, [name]: value })
+
+  return [
+    {
+      name: 'text',
+      placeholder: 'Quote text',
+      value: values.text,
+      error: validationErrors.text,
+      onChange: (e) => setValuesHandler('text', e.target.value),
+    },
+    {
+      name: 'author',
+      placeholder: 'Author',
+      value: values.author,
+      error: validationErrors.author,
+      onChange: (e) => setValuesHandler('author', e.target.value),
+    },
+    {
+      name: 'categories',
+      placeholder: 'Categories (comma-separated)',
+      value: values.categories,
+      error: validationErrors.categories,
+      onChange: (e) => setValuesHandler('categories', e.target.value),
+    },
+  ]
+}
 
 // For search page form
 export const createSearchInputFields = ({

@@ -2,21 +2,13 @@ import { InputField } from '@components/InputField'
 import { createQuotesInputFields } from '@config/inputFields'
 
 export const QuoteFormFields = ({
-  text,
-  setText,
-  author,
-  setAuthor,
-  categories,
-  setCategories,
+  values,
+  setValues,
   validationErrors,
 }) => {
   const quotesInputFields = createQuotesInputFields({
-    text,
-    setText,
-    author,
-    setAuthor,
-    categories,
-    setCategories,
+    values,
+    setValues,
     validationErrors,
   })
 

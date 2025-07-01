@@ -1,12 +1,9 @@
 const CATEGORY_NAME_REGEX = /^[a-z0-9\-]+$/
 
-export const isQuoteFormValid = ({
-  text,
-  author,
-  categories,
-  setValidationErrors,
-}) => {
+export const isQuoteFormValid = ({ values, setValidationErrors }) => {
   const errors = {}
+  const { text, author, categories } = values
+
   if (text.length < 10)
     errors.text = 'Text must be at least 10 characters long.'
   if (author.length < 2 || author.length > 255)

@@ -2,12 +2,8 @@ import { Button } from '@components/Button'
 import { QuoteFormFields } from '@components/QuoteFormFields'
 
 export const QuoteForm = ({
-  text,
-  setText,
-  author,
-  setAuthor,
-  categories,
-  setCategories,
+  values,
+  setValues,
   validationErrors,
   handleSubmit,
   buttonText,
@@ -15,12 +11,8 @@ export const QuoteForm = ({
   return (
     <div className="p-4">
       <QuoteFormFields
-        text={text}
-        setText={setText}
-        author={author}
-        setAuthor={setAuthor}
-        categories={categories}
-        setCategories={setCategories}
+        values={values}
+        setValues={setValues}
         validationErrors={validationErrors}
       />
       <div className="flex justify-center mb-6">
