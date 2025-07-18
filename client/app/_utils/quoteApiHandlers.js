@@ -3,8 +3,8 @@ import { fetcher } from '@utils/fetcher'
 import { isQuoteFormValid } from '@utils/validation'
 
 const QUOTES_API_ENDPOINT = 'quotes'
-const RANDOM_QUOTES_ENDPOINT = 'quotes/random'
-const RANDOM_QUOTES_LIMIT = 9
+const RANDOM_QUOTES_API_ENDPOINT = 'quotes/random'
+// const RANDOM_QUOTES_LIMIT = 9
 const getSingleQuoteApiEndpoint = (id) => `${QUOTES_API_ENDPOINT}/${id}`
 
 const isQuoteValidId = (id) => {
@@ -12,12 +12,23 @@ const isQuoteValidId = (id) => {
   return Number.isInteger(parsedId) && parsedId > 0 && parsedId < 2147483647
 }
 
-export const fetchQuotes = async ({ setQuotes, setIsLoading }) => {
+export const fetchRandomQuotes = async ({
+  setQuotes,
+  setIsLoading,
+}) => {
   setIsLoading(true)
-  const queryParams = {
-    limit: RANDOM_QUOTES_LIMIT,
-  }
-  const data = await fetcher.get(RANDOM_QUOTES_ENDPOINT, queryParams)
+  const data = await fetcher.get(RANDOM_QUOTES_API_ENDPOINT)
+  if (data) setQuotes(data)
+  setIsLoading(false)
+}
+
+export const fetchQuotes = async ({
+  setQuotes,
+  setIsLoading,
+  queryParams = {},
+}) => {
+  setIsLoading(true)
+  const data = await fetcher.get(QUOTES_API_ENDPOINT, queryParams)
   if (data) setQuotes(data)
   setIsLoading(false)
 }

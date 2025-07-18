@@ -7,17 +7,14 @@ import { Quotes } from '@components/Quotes'
 import { InputField } from '@components/InputField'
 import { Button } from '@components/Button'
 import { createSearchInputFields } from '@config/inputFields'
-import { fetcher } from '@utils/fetcher'
 import { getSearchInputValidationMessage } from '@utils/validation'
-
-const QUOTES_URL_ENDPOINT = 'quotes'
-const DEFAULT_LIMIT = 9
+import { fetchQuotes } from '@utils/quoteApiHandlers'
 
 const createSearchQueryString = ({
   text,
   author,
   category,
-  limit = DEFAULT_LIMIT,
+  limit,
 }) => {
   const params = new URLSearchParams()
 
@@ -33,7 +30,7 @@ export default function SearchQuotesPage() {
   const [text, setText] = useState('')
   const [author, setAuthor] = useState('')
   const [category, setCategory] = useState('')
-  const [limit, setLimit] = useState()
+  const [limit, setLimit] = useState('')
   const [searchSubmitted, setSearchSubmitted] = useState(false)
   const [searchButtonClicked, setSearchButtonClicked] = useState(false)
   const [quotes, setQuotes] = useState([])
@@ -47,12 +44,13 @@ export default function SearchQuotesPage() {
     const initialText = searchParams.get('text') || ''
     const initialAuthor = searchParams.get('author') || ''
     const initialCategory = searchParams.get('category') || ''
-    const initialLimit = searchParams.get('limit') || DEFAULT_LIMIT
+    const initialLimit = searchParams.get('limit') || ''
 
     const shouldTriggerSearch =
       initialText !== text ||
       initialAuthor !== author ||
-      initialCategory !== category
+      initialCategory !== category || 
+      initialLimit !== limit
 
     if (shouldTriggerSearch) {
       setText(initialText)
@@ -81,19 +79,19 @@ export default function SearchQuotesPage() {
       return
     }
 
-    const query = createSearchQueryString({
+    const queryParams = {
       text: searchText,
       author: searchAuthor,
       category: searchCategory,
       limit: searchLimit,
-    })
+    }
+
+    const query = createSearchQueryString(queryParams)
+    // Update the query string in the URL
     router.push(`?${query}`)
 
     setSearchSubmitted(true)
-    setIsLoading(true)
-    const data = await fetcher.get(`${QUOTES_URL_ENDPOINT}?${query}`)
-    if (data) setQuotes(data)
-    setIsLoading(false)
+    fetchQuotes({ setQuotes, setIsLoading, queryParams })
   }
 
   const clearSearch = () => {

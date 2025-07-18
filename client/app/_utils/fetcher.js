@@ -4,7 +4,11 @@ import { handleErrors } from '@utils/fetcherErrorsHandler'
 
 const request = async (method, endpoint, payload = null, queryParams = {}) => {
   try {
-    const queryString = new URLSearchParams(queryParams).toString()
+    // Construct URL with query params for GET requests
+    const filteredParams = Object.fromEntries(
+      Object.entries(queryParams).filter(([key, value]) => value), // filter out falsy values
+    )
+    const queryString = new URLSearchParams(filteredParams).toString()
     const url = queryString
       ? `${API_URL}/${endpoint}?${queryString}`
       : `${API_URL}/${endpoint}`
