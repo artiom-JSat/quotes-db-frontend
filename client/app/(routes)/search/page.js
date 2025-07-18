@@ -9,22 +9,7 @@ import { Button } from '@components/Button'
 import { createSearchInputFields } from '@config/inputFields'
 import { getSearchInputValidationMessage } from '@utils/validation'
 import { fetchQuotes } from '@utils/quoteApiHandlers'
-
-const createSearchQueryString = ({
-  text,
-  author,
-  category,
-  limit,
-}) => {
-  const params = new URLSearchParams()
-
-  if (text) params.append('text', text)
-  if (author) params.append('author', author)
-  if (category) params.append('category', category)
-  if (limit) params.append('limit', limit)
-
-  return params.toString()
-}
+import { createSearchQueryString } from '@utils/queryString'
 
 export default function SearchQuotesPage() {
   const [text, setText] = useState('')

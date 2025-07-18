@@ -1,14 +1,11 @@
 import { toast } from 'react-toastify'
 import { API_URL } from '@config/config'
 import { handleErrors } from '@utils/fetcherErrorsHandler'
+import { createSearchQueryString } from '@utils/queryString'
 
 const request = async (method, endpoint, payload = null, queryParams = {}) => {
   try {
-    // Construct URL with query params for GET requests
-    const filteredParams = Object.fromEntries(
-      Object.entries(queryParams).filter(([key, value]) => value), // filter out falsy values
-    )
-    const queryString = new URLSearchParams(filteredParams).toString()
+    const queryString = createSearchQueryString(queryParams)
     const url = queryString
       ? `${API_URL}/${endpoint}?${queryString}`
       : `${API_URL}/${endpoint}`
