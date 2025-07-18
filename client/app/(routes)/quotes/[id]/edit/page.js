@@ -20,8 +20,19 @@ export default function EditQuotePage({ params }) {
 
   const router = useRouter()
 
+  const formatFormValues = ({ text, author, categories }) => ({
+    text,
+    author,
+    categories: categories.join(', '), // Assuming categories is an array
+  })
+
   useEffect(() => {
-    fetchQuoteById({ quoteId: id, setFormValues, setIsLoading })
+    fetchQuoteById({
+      id,
+      setIsLoading,
+      setData: setFormValues,
+      formatData: formatFormValues,
+    })
   }, [])
 
   if (isLoading) {
