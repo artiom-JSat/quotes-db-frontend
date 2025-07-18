@@ -3,10 +3,23 @@ import { fetcher } from '@utils/fetcher'
 import { isQuoteFormValid } from '@utils/validation'
 
 const QUOTES_API_ENDPOINT = 'quotes'
+const RANDOM_QUOTES_ENDPOINT = 'quotes/random'
+const RANDOM_QUOTES_LIMIT = 9
+const getSingleQuoteApiEndpoint = (id) => `${QUOTES_API_ENDPOINT}/${id}`
 
 const isQuoteValidId = (id) => {
   const parsedId = parseInt(id, 10)
   return Number.isInteger(parsedId) && parsedId > 0 && parsedId < 2147483647
+}
+
+export const fetchQuotes = async ({ setQuotes, setIsLoading }) => {
+  setIsLoading(true)
+  const queryParams = {
+    limit: RANDOM_QUOTES_LIMIT,
+  }
+  const data = await fetcher.get(RANDOM_QUOTES_ENDPOINT, queryParams)
+  if (data) setQuotes(data)
+  setIsLoading(false)
 }
 
 export const fetchQuoteById = async ({
@@ -17,20 +30,26 @@ export const fetchQuoteById = async ({
 }) => {
   if (!isQuoteValidId(id)) {
     toast.error(
-      `Invalid quote ID ${id}. ID must be an integer in the range 1...2147483647.`,
+      `Invalid quote ID ${id}. ID must be an integer in the range 1 to 2147483647.`,
     )
     setIsLoading(false)
     return
   }
 
-  const SINGLE_QUOTE_API_ENDPOINT = `${QUOTES_API_ENDPOINT}/${id}`
-  const data = await fetcher.get(SINGLE_QUOTE_API_ENDPOINT)
+  const data = await fetcher.get(getSingleQuoteApiEndpoint(id))
 
   if (data) {
     const formattedData = formatData ? formatData(data) : data
     setData(formattedData)
   }
   setIsLoading(false)
+}
+
+export const deleteQuoteById = async ({ id, router }) => {
+  if (await fetcher.delete(getSingleQuoteApiEndpoint(id))) {
+    toast.success(`Quote with ID ${id} was successfully deleted!`)
+    setTimeout(() => router.push('/'), 2000)
+  }
 }
 
 const handleQuoteForm = async ({

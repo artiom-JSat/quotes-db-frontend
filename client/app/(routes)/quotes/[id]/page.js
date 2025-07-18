@@ -4,11 +4,9 @@ import { use, useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { ClipLoader } from 'react-spinners'
-import { toast } from 'react-toastify'
 import { Button } from '@components/Button'
-import { fetcher } from '@utils/fetcher'
 import { CategoryTags } from '@components/CategoryTags'
-import { fetchQuoteById } from '@utils/quoteApiHandlers'
+import { deleteQuoteById, fetchQuoteById } from '@utils/quoteApiHandlers'
 
 export default function QuotePage({ params }) {
   const { id } = use(params)
@@ -16,21 +14,6 @@ export default function QuotePage({ params }) {
   const [isLoading, setIsLoading] = useState(true)
 
   const router = useRouter()
-
-  const SINGLE_QUOTE_ENDPOINT = `quotes/${id}`
-
-  const deleteQuote = async () => {
-    if (await fetcher.delete(SINGLE_QUOTE_ENDPOINT)) {
-      toast.success(`Quote with ID ${id} was successfully deleted!`)
-      setTimeout(() => router.push('/'), 2000)
-    }
-  }
-
-  // const fetchQuote = async () => {
-  //   const data = await fetcher.get(SINGLE_QUOTE_ENDPOINT)
-  //   if (data) setQuote(data)
-  //   setIsLoading(false)
-  // }
 
   useEffect(() => {
     fetchQuoteById({ id, setIsLoading, setData: setQuote })
@@ -67,7 +50,11 @@ export default function QuotePage({ params }) {
         <Link href={`/quotes/${quote.id}/edit`}>
           <Button text="Edit" variant="primary" />
         </Link>
-        <Button onClick={deleteQuote} variant="danger" text="Delete" />
+        <Button
+          onClick={() => deleteQuoteById({ id, router })}
+          variant="danger"
+          text="Delete"
+        />
       </div>
     </div>
   )

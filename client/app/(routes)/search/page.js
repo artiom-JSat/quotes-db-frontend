@@ -10,7 +10,7 @@ import { createSearchInputFields } from '@config/inputFields'
 import { fetcher } from '@utils/fetcher'
 import { getSearchInputValidationMessage } from '@utils/validation'
 
-const QUOTES_URL_ENDPOINT = `quotes`
+const QUOTES_URL_ENDPOINT = 'quotes'
 const DEFAULT_LIMIT = 9
 
 const createSearchQueryString = ({
