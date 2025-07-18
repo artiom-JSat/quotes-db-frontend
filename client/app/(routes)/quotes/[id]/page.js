@@ -8,6 +8,7 @@ import { toast } from 'react-toastify'
 import { Button } from '@components/Button'
 import { fetcher } from '@utils/fetcher'
 import { CategoryTags } from '@components/CategoryTags'
+import { fetchQuoteById } from '@utils/quoteApiHandlers'
 
 export default function QuotePage({ params }) {
   const { id } = use(params)
@@ -18,11 +19,6 @@ export default function QuotePage({ params }) {
 
   const SINGLE_QUOTE_ENDPOINT = `quotes/${id}`
 
-  const isValidId = (id) => {
-    const parsedId = parseInt(id, 10)
-    return Number.isInteger(parsedId) && parsedId > 0
-  }
-
   const deleteQuote = async () => {
     if (await fetcher.delete(SINGLE_QUOTE_ENDPOINT)) {
       toast.success(`Quote with ID ${id} was successfully deleted!`)
@@ -30,20 +26,14 @@ export default function QuotePage({ params }) {
     }
   }
 
-  const fetchQuote = async () => {
-    if (!isValidId(id)) {
-      toast.error(`Invalid quote ID ${id}. ID must be an integer than 0.`)
-      setIsLoading(false)
-      return
-    }
-
-    const data = await fetcher.get(SINGLE_QUOTE_ENDPOINT)
-    if (data) setQuote(data)
-    setIsLoading(false)
-  }
+  // const fetchQuote = async () => {
+  //   const data = await fetcher.get(SINGLE_QUOTE_ENDPOINT)
+  //   if (data) setQuote(data)
+  //   setIsLoading(false)
+  // }
 
   useEffect(() => {
-    fetchQuote()
+    fetchQuoteById({ id, setIsLoading, setData: setQuote })
   }, [])
 
   if (isLoading) {

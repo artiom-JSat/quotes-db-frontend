@@ -4,21 +4,31 @@ import { isQuoteFormValid } from '@utils/validation'
 
 const QUOTES_API_ENDPOINT = 'quotes'
 
+const isQuoteValidId = (id) => {
+  const parsedId = parseInt(id, 10)
+  return Number.isInteger(parsedId) && parsedId > 0 && parsedId < 2147483647
+}
+
 export const fetchQuoteById = async ({
-  quoteId,
-  setFormValues,
+  id,
+  setData, // Generic setter function
   setIsLoading,
+  formatData, // Optional function to format the response data
 }) => {
-  const SINGLE_QUOTE_API_ENDPOINT = `${QUOTES_API_ENDPOINT}/${quoteId}`
+  if (!isQuoteValidId(id)) {
+    toast.error(
+      `Invalid quote ID ${id}. ID must be an integer in the range 1...2147483647.`,
+    )
+    setIsLoading(false)
+    return
+  }
+
+  const SINGLE_QUOTE_API_ENDPOINT = `${QUOTES_API_ENDPOINT}/${id}`
   const data = await fetcher.get(SINGLE_QUOTE_API_ENDPOINT)
 
   if (data) {
-    const { text, author, categories } = data
-    setFormValues({
-      text,
-      author,
-      categories: categories.join(', '), // Assuming categories is an array
-    })
+    const formattedData = formatData ? formatData(data) : data
+    setData(formattedData)
   }
   setIsLoading(false)
 }
