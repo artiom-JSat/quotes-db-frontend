@@ -33,30 +33,29 @@ export const createQuotesInputFields = ({
 }
 
 // For search page form
-export const createSearchInputFields = ({
-  text,
-  author,
-  category,
-  limit,
-  validationErrors,
-}) => [
+export const createSearchInputFields = ({ searchValues, validationErrors }) => [
   {
     name: 'text',
     placeholder: 'Search by text',
-    value: text,
+    value: searchValues.text,
     error: validationErrors.text,
   },
   {
     name: 'author',
     placeholder: 'Search by author',
-    value: author,
+    value: searchValues.author,
     error: validationErrors.author,
   },
   {
     name: 'category',
     placeholder: 'Search by category',
-    value: category,
+    value: searchValues.category,
     error: validationErrors.category,
   },
-  { name: 'limit', placeholder: 'Limit', value: limit || '', error: null }, // no error for limit
+  {
+    name: 'limit',
+    placeholder: 'Limit',
+    value: searchValues.limit || '',
+    error: null,
+  }, // no error for limit
 ]

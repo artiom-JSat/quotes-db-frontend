@@ -9,13 +9,20 @@ import { Button } from '@components/Button'
 import { createSearchInputFields } from '@config/inputFields'
 import { getSearchInputValidationMessage } from '@utils/validation'
 import { fetchQuotes } from '@utils/quoteApiHandlers'
-import { createSearchQueryString } from '@utils/queryString'
+import {
+  createSearchQueryString,
+  createSearchValuesFromQueryString,
+} from '@utils/queryString'
+
+const INITIAL_SEARCH_VALUES = {
+  text: '',
+  author: '',
+  category: '',
+  limit: '',
+}
 
 export default function SearchQuotesPage() {
-  const [text, setText] = useState('')
-  const [author, setAuthor] = useState('')
-  const [category, setCategory] = useState('')
-  const [limit, setLimit] = useState('')
+  const [searchValues, setSearchValues] = useState(INITIAL_SEARCH_VALUES)
   const [searchSubmitted, setSearchSubmitted] = useState(false)
   const [searchButtonClicked, setSearchButtonClicked] = useState(false)
   const [quotes, setQuotes] = useState([])
@@ -26,50 +33,26 @@ export default function SearchQuotesPage() {
   const searchParams = useSearchParams()
 
   useEffect(() => {
-    const initialText = searchParams.get('text') || ''
-    const initialAuthor = searchParams.get('author') || ''
-    const initialCategory = searchParams.get('category') || ''
-    const initialLimit = searchParams.get('limit') || ''
+    const searchValuesFromQueryString =
+      createSearchValuesFromQueryString(searchParams)
 
-    const shouldTriggerSearch =
-      initialText !== text ||
-      initialAuthor !== author ||
-      initialCategory !== category || 
-      initialLimit !== limit
+    const shouldTriggerSearch = Object.entries(searchValuesFromQueryString)
+      .some(([key, value]) => searchValues[key] !== value)
 
     if (shouldTriggerSearch) {
-      setText(initialText)
-      setAuthor(initialAuthor)
-      setCategory(initialCategory)
-      setLimit(initialLimit)
-
-      handleSearch({
-        searchText: initialText,
-        searchAuthor: initialAuthor,
-        searchCategory: initialCategory,
-        searchLimit: initialLimit,
-      })
+      setSearchValues(searchValuesFromQueryString)
+      handleSearch(searchValuesFromQueryString)
     }
   }, [searchParams])
 
-  const handleSearch = async ({
-    searchText = text,
-    searchAuthor = author,
-    searchCategory = category,
-    searchLimit = limit,
-  }) => {
+  const handleSearch = async (inputSearchValues) => {
     setSearchButtonClicked(true)
 
     if (Object.keys(validationErrors).length > 0) {
       return
     }
 
-    const queryParams = {
-      text: searchText,
-      author: searchAuthor,
-      category: searchCategory,
-      limit: searchLimit,
-    }
+    const queryParams = { ...inputSearchValues }
 
     const query = createSearchQueryString(queryParams)
     // Update the query string in the URL
@@ -80,10 +63,7 @@ export default function SearchQuotesPage() {
   }
 
   const clearSearch = () => {
-    setText('')
-    setAuthor('')
-    setCategory('')
-    setLimit()
+    setSearchValues({ ...INITIAL_SEARCH_VALUES })
     setSearchButtonClicked(false)
     setSearchSubmitted(false)
     setQuotes([])
@@ -91,10 +71,7 @@ export default function SearchQuotesPage() {
   }
 
   const handleInputChange = (name, value) => {
-    if (name === 'text') setText(value)
-    if (name === 'author') setAuthor(value)
-    if (name === 'category') setCategory(value)
-    if (name === 'limit') setLimit(value)
+    setSearchValues({ ...searchValues, [name]: value })
 
     const errorMessage = getSearchInputValidationMessage(name, value)
     const newValidationErrors = { ...validationErrors }
@@ -107,10 +84,7 @@ export default function SearchQuotesPage() {
   }
 
   const searchInputFields = createSearchInputFields({
-    text,
-    author,
-    category,
-    limit,
+    searchValues,
     validationErrors,
   })
 
@@ -130,7 +104,7 @@ export default function SearchQuotesPage() {
       </div>
 
       <div className="flex justify-center md-6 space-x-4">
-        <Button onClick={handleSearch} text="Search" />
+        <Button onClick={() => handleSearch(searchValues)} text="Search" />
         <Button onClick={clearSearch} text="Clear" variant="secondary" />
       </div>
 
@@ -139,7 +113,11 @@ export default function SearchQuotesPage() {
           <ClipLoader size={60} color="violet" />
         </div>
       ) : quotes.length > 0 ? (
-        <Quotes quotes={quotes} category={category} searchText={text} />
+        <Quotes
+          quotes={quotes}
+          category={searchValues.category}
+          searchText={searchValues.text}
+        />
       ) : (
         searchSubmitted && (
           <p className="text-xl pt-10 text-center text-gray-600 dark:text-gray-400">
