@@ -1,4 +1,8 @@
-import { createSearchQueryString } from '@utils/queryString'
+import { ALLOWED_SEARCH_PARAMS_NAMES } from '@config/config'
+import {
+  createSearchQueryString,
+  createSearchValuesFromQueryString,
+} from '@utils/queryString'
 
 describe('Testing createSearchQueryString function', () => {
   test('should return a valid query string with allowed params', () => {
@@ -53,5 +57,93 @@ describe('Testing createSearchQueryString function', () => {
     }
     const result = createSearchQueryString(queryParams)
     expect(result).toBe('author=Alice&limit=50&offset=0')
+  })
+})
+
+describe('Testing createSearchValuesFromQueryString function', () => {
+  test('should correctly create an object with allowed params from searchParams', () => {
+    // Mock searchParams object
+    const mockSearchParams = {
+      get: jest.fn((param) => {
+        const params = {
+          text: 'some text',
+          author: 'John Doe',
+          category: 'category1',
+          limit: '10',
+          offset: '20',
+        }
+        return params[param] || null
+      }),
+    }
+
+    const result = createSearchValuesFromQueryString(mockSearchParams)
+
+    expect(result).toEqual({
+      text: 'some text',
+      author: 'John Doe',
+      category: 'category1',
+      limit: '10',
+      offset: '20',
+    })
+
+    // Check that the get method was called for each allowed param name
+    ALLOWED_SEARCH_PARAMS_NAMES.forEach((param) => {
+      expect(mockSearchParams.get).toHaveBeenCalledWith(param)
+    })
+  })
+
+  test('should return empty string for missing searchParams', () => {
+    // Mock searchParams object
+    const mockSearchParams = {
+      get: jest.fn((param) => {
+        const params = {
+          text: 'another text',
+        }
+        return params[param] || null
+      }),
+    }
+
+    const result = createSearchValuesFromQueryString(mockSearchParams)
+
+    expect(result).toEqual({
+      text: 'another text',
+      author: '',
+      category: '',
+      limit: '',
+      offset: '',
+    })
+  })
+
+  test('should ignore unsupported params', () => {
+    const mockSearchParams = {
+      get: jest.fn((param) => {
+        const params = {
+          text: 'valid text',
+          author: 'John Doe',
+          unsupportedParam1: 'value1', // Unsupported param
+          unsupportedParam2: 'value2', // Unsupported param
+        }
+        return params[param] || null
+      }),
+    }
+
+    const result = createSearchValuesFromQueryString(mockSearchParams)
+
+    expect(result).toEqual({
+      text: 'valid text',
+      author: 'John Doe',
+      category: '',
+      limit: '',
+      offset: '',
+    })
+
+    // Ensure only allowed param names are queried
+    ALLOWED_SEARCH_PARAMS_NAMES.forEach((param) => {
+      expect(mockSearchParams.get).toHaveBeenCalledWith(param)
+    })
+
+    // Ensure unsupported params are ignored
+    expect(mockSearchParams.get).not.toHaveBeenCalledWith('unsupportedParam1')
+    expect(mockSearchParams.get).not.toHaveBeenCalledWith('unsupportedParam2')
   })
 })
