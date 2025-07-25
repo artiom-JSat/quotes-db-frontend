@@ -4,7 +4,7 @@ import {
   createSearchValuesFromQueryString,
 } from '@utils/queryString'
 
-describe('Testing createSearchQueryString function', () => {
+describe('Tests for the createSearchQueryString function', () => {
   test('should return a valid query string with allowed params', () => {
     const queryParams = {
       text: 'life',
@@ -60,7 +60,7 @@ describe('Testing createSearchQueryString function', () => {
   })
 })
 
-describe('Testing createSearchValuesFromQueryString function', () => {
+describe('Tests for the createSearchValuesFromQueryString function', () => {
   test('should correctly create an object with allowed params from searchParams', () => {
     // Mock searchParams object
     const mockSearchParams = {
