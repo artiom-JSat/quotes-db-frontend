@@ -18,7 +18,8 @@ const INITIAL_SEARCH_VALUES = {
   text: '',
   author: '',
   category: '',
-  limit: ''
+  limit: '',
+  offset: '',
 }
 
 export default function SearchQuotesPage() {
@@ -36,14 +37,19 @@ export default function SearchQuotesPage() {
     const searchValuesFromQueryString =
       createSearchValuesFromQueryString(searchParams)
 
-    const shouldTriggerSearch = Object.entries(searchValuesFromQueryString)
-      .some(([key, value]) => searchValues[key] !== value)
-
-    if (shouldTriggerSearch) {
-      setSearchValues(searchValuesFromQueryString)
-      handleSearch(searchValuesFromQueryString)
+    const newSearchValues = {
+      ...INITIAL_SEARCH_VALUES,
+      ...searchValuesFromQueryString,
     }
-  }, [searchParams])
+
+    if (!deepEqual(newSearchValues, searchValues)) {
+      setSearchValues(newSearchValues)
+
+      if (Object.keys(searchValuesFromQueryString).length === 0) {
+        setQuotes([])
+      } else handleSearch(searchValuesFromQueryString)
+    }
+  }, [searchParams]) // Run on the first render and each time when searchParams changes
 
   const handleSearch = async (inputSearchValues) => {
     setSearchButtonClicked(true)
@@ -71,7 +77,7 @@ export default function SearchQuotesPage() {
   }
 
   const handleInputChange = (name, value) => {
-    setSearchValues({ ...searchValues, [name]: value ?? '' })
+    setSearchValues({ ...searchValues, [name]: value })
 
     const errorMessage = getSearchInputValidationMessage(name, value)
     const newValidationErrors = { ...validationErrors }

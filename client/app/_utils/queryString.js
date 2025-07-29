@@ -26,9 +26,3 @@ export const createSearchValuesFromQueryString = (searchParams) => {
     return acc;
   }, {});
 };
-
-// export const createSearchValuesFromQueryString = (searchParams) =>
-//   ALLOWED_SEARCH_PARAMS_NAMES.reduce((acc, searchParamName) => {
-//     acc[searchParamName] = searchParams.get(searchParamName) || ''
-//     return acc
-//   }, {})
