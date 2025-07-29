@@ -107,10 +107,6 @@ describe('Tests for the createSearchValuesFromQueryString function', () => {
 
     expect(result).toEqual({
       text: 'another text',
-      author: '',
-      category: '',
-      limit: '',
-      offset: '',
     })
   })
 
@@ -132,9 +128,6 @@ describe('Tests for the createSearchValuesFromQueryString function', () => {
     expect(result).toEqual({
       text: 'valid text',
       author: 'John Doe',
-      category: '',
-      limit: '',
-      offset: '',
     })
 
     // Ensure only allowed param names are queried

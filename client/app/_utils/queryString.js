@@ -16,8 +16,19 @@ export const createSearchQueryString = (queryParams = {}) => {
   return new URLSearchParams(filteredParams).toString()
 }
 
-export const createSearchValuesFromQueryString = (searchParams) =>
-  ALLOWED_SEARCH_PARAMS_NAMES.reduce((acc, searchParamName) => {
-    acc[searchParamName] = searchParams.get(searchParamName) || ''
-    return acc
-  }, {})
+export const createSearchValuesFromQueryString = (searchParams) => {
+  return ALLOWED_SEARCH_PARAMS_NAMES.reduce((acc, searchParamName) => {
+    const value = searchParams.get(searchParamName);
+    // Only include the parameter if it exists and is not empty
+    if (value) {
+      acc[searchParamName] = value;
+    }
+    return acc;
+  }, {});
+};
+
+// export const createSearchValuesFromQueryString = (searchParams) =>
+//   ALLOWED_SEARCH_PARAMS_NAMES.reduce((acc, searchParamName) => {
+//     acc[searchParamName] = searchParams.get(searchParamName) || ''
+//     return acc
+//   }, {})

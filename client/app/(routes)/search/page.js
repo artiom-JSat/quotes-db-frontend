@@ -18,7 +18,7 @@ const INITIAL_SEARCH_VALUES = {
   text: '',
   author: '',
   category: '',
-  limit: '',
+  limit: ''
 }
 
 export default function SearchQuotesPage() {
@@ -71,7 +71,7 @@ export default function SearchQuotesPage() {
   }
 
   const handleInputChange = (name, value) => {
-    setSearchValues({ ...searchValues, [name]: value })
+    setSearchValues({ ...searchValues, [name]: value ?? '' })
 
     const errorMessage = getSearchInputValidationMessage(name, value)
     const newValidationErrors = { ...validationErrors }
