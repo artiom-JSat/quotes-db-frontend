@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { ClipLoader } from 'react-spinners'
+import deepEqual from 'deep-equal'
 import { Quotes } from '@components/Quotes'
 import { InputField } from '@components/InputField'
 import { Button } from '@components/Button'
