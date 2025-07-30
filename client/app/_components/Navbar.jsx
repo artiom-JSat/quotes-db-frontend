@@ -64,7 +64,7 @@ export const Navbar = () => {
             Quotes app
           </h1>
         </Link>
-        <h1 className="hidden md:block absolute left-1/2 transform -translate-x-1/2 text-xl lg:text-2xl dark:text-white">
+        <h1 className="hidden md:block absolute left-1/2 transform -translate-x-1/2 text-xl lg:text-2xl text-gray-800 dark:text-white">
           {pageTitle}
         </h1>
 

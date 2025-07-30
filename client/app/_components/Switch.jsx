@@ -9,7 +9,7 @@ export const Switch = ({ checked = false, onChange = () => {} }) => {
       onClick={() => onChange(!checked)}
       role="switch"
       aria-checked={checked}
-      className={`relative inline-flex h-8 w-13 items-center rounded-full transition-colors ${
+      className={`cursor-pointer relative inline-flex h-8 w-13 items-center rounded-full transition-colors ${
         checked ? 'bg-violet-800' : 'bg-yellow-400'
       }`}
     >
