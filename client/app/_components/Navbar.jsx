@@ -5,6 +5,7 @@ import { usePathname, useParams } from 'next/navigation'
 import { useState } from 'react'
 import { AppIcon } from '@shared/appIcon'
 import { MenuIcon } from '@shared/menuIcon'
+import { ToggleTheme } from '@components/ToggleTheme'
 
 const getPageTitle = (pathname, params) => {
   const staticTitles = {
@@ -113,6 +114,7 @@ export const Navbar = () => {
               {menuItem.text}
             </Link>
           ))}
+          <ToggleTheme />
         </div>
       </div>
     </nav>
