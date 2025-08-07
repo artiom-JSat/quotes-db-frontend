@@ -64,7 +64,7 @@ export const Navbar = () => {
             Quotes app
           </h1>
         </Link>
-        <h1 className="hidden md:block absolute left-1/2 transform -translate-x-1/2 text-xl lg:text-2xl text-gray-800 dark:text-white">
+        <h1 className="hidden xl:block absolute left-1/2 transform -translate-x-1/2 text-xl lg:text-2xl text-gray-800 dark:text-white">
           {pageTitle}
         </h1>
 
@@ -104,7 +104,7 @@ export const Navbar = () => {
         }
 
         {/* Desktop Menu */}
-        <div className="hidden md:flex items-center gap-2 lg:gap-4 xl:gap-8 text-xl">
+        <div className="hidden md:flex items-center gap-6 text-xl">
           <MenuButton />
           {menuItems.map((menuItem) => (
             <Link
