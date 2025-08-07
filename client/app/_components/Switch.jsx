@@ -21,7 +21,7 @@ export const Switch = ({ checked = false, onChange = () => {} }) => {
         {checked ? (
           <Moon className="h-4 w-4 text-violet-800" />
         ) : (
-          <Sun className="h-4 w-4 text-yellow-500" />
+          <Sun className="h-4 w-4 text-yellow-400" />
         )}
       </span>
     </button>

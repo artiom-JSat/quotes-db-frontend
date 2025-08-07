@@ -14,6 +14,6 @@ export const InputField = ({ placeholder, value, onChange, error, showError }) =
 }
 
 export const inputStyle =
-  'w-full p-2 border border-gray-300 rounded dark:bg-gray-800 dark:border-gray-600 dark:text-white'
+  'w-full p-2 border border-gray-300 rounded bg-white dark:bg-gray-800 dark:border-gray-600 dark:text-white'
 
 export const errorStyle = 'text-red-500 text-sm absolute'
