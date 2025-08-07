@@ -39,7 +39,7 @@ All necessary database files are located in the `database/data`.
 
 ## Add environment variables
 
-1. Create `.env` file in the `server` foler
+1. Create `.env` file in the `server` folder
 1. Fill environment variables based on the `.env.sample` file
 
 ## Install NPM dependencies
