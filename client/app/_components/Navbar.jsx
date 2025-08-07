@@ -5,6 +5,7 @@ import { usePathname, useParams } from 'next/navigation'
 import { useState } from 'react'
 import { AppIcon } from '@shared/appIcon'
 import { MenuIcon } from '@shared/menuIcon'
+import { ToggleTheme } from '@components/ToggleTheme'
 
 const getPageTitle = (pathname, params) => {
   const staticTitles = {
@@ -63,7 +64,7 @@ export const Navbar = () => {
             Quotes app
           </h1>
         </Link>
-        <h1 className="hidden md:block absolute left-1/2 transform -translate-x-1/2 text-xl lg:text-2xl dark:text-white">
+        <h1 className="hidden md:block absolute left-1/2 transform -translate-x-1/2 text-xl lg:text-2xl text-gray-800 dark:text-white">
           {pageTitle}
         </h1>
 
@@ -76,7 +77,7 @@ export const Navbar = () => {
             isOpen ? 'translate-x-0' : 'translate-x-full'
           } transition-transform duration-500 ease-in-out z-40 bg-gradient-to-r from-transparent to-white dark:from-transparent dark:to-gray-800`}
         >
-          <div className="flex flex-col pt-5 pr-5 items-end justify-center space-y-4 text-2xl">
+          <div className="flex flex-col pt-5 pr-8 items-end justify-center space-y-4 text-2xl">
             <MenuButton />
             {menuItems.map((menuItem) => (
               <Link
@@ -88,6 +89,7 @@ export const Navbar = () => {
                 {menuItem.text}
               </Link>
             ))}
+            <ToggleTheme />
           </div>
         </div>
 
@@ -102,7 +104,7 @@ export const Navbar = () => {
         }
 
         {/* Desktop Menu */}
-        <div className="hidden md:flex space-x-2 lg:space-x-8 pl-20 text-xl">
+        <div className="hidden md:flex items-center gap-2 lg:gap-4 xl:gap-8 text-xl">
           <MenuButton />
           {menuItems.map((menuItem) => (
             <Link
@@ -113,6 +115,7 @@ export const Navbar = () => {
               {menuItem.text}
             </Link>
           ))}
+          <ToggleTheme />
         </div>
       </div>
     </nav>
